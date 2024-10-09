@@ -1,0 +1,13 @@
+<div class="container">
+    <h1><%= title %></h1>
+    <div class="error-message">
+        <p><%= message %></p>
+        <% if (title === '404 Not Found') { %>
+            <p>Oops! Looks like this page took a wrong turn. 🚧</p>
+        <% } else { %>
+            <p>Don't worry, we all make mistakes! 😅</p>
+        <% } %>
+        <p>Feel free to <a href="/">go back to the homepage</a>.</p>
+    </div>
+</div>
+

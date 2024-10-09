@@ -6,11 +6,11 @@
 /* ***********************
  * Require Statements
  *************************/
+const env = require("dotenv").config()
 const session = require("express-session")
 const pool = require('./database/')
 const express = require("express")
 const expressLayouts = require("express-ejs-layouts")
-const env = require("dotenv").config()
 const path = require("path")
 const app = express()
 const static = require("./routes/static")

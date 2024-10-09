@@ -1,0 +1,17 @@
+<h1><%= vehicle.inv_make %> <%= vehicle.inv_model %></h1>
+  <div class="inline-container">
+    <div class="image-column">
+      <img src="<%= vehicle.inv_image %>" alt="<%= vehicle.inv_make %> <%= vehicle.inv_model %>" class="full-size-image">
+    </div>
+    <div class="details-column">
+      <div class="details">
+        <p><strong>Make:</strong> <%= vehicle.inv_make %></p>
+        <p><strong>Model:</strong> <%= vehicle.inv_model %></p>
+        <p><strong>Color:</strong> <%= vehicle.inv_color %></p>
+        <p><strong>Year:</strong> <%= vehicle.inv_year %></p>
+        <p><strong>Price:</strong> <%= new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(vehicle.inv_price) %></p>
+        <p><strong>Mileage:</strong> <%= new Intl.NumberFormat('en-US').format(vehicle.inv_miles) %> miles</p>
+        <p><strong>Description:</strong> <%= vehicle.inv_description %></p>
+      </div>
+    </div>
+  </div>

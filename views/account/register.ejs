@@ -1,3 +1,10 @@
+<% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
 <div class="form-container">
     <form class="login-form" action="/account/register" method="post"> 
         <h2>Register</h2>

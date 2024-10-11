@@ -1,4 +1,4 @@
-const invModel = require("../models/account-model")
+const accountModel = require("../models/account-model")
 const utilities = require("../utilities")
 
 /* ****************************************

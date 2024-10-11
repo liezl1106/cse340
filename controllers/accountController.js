@@ -1,4 +1,5 @@
 const accountModel = require("../models/account-model")
+console.log(accountModel)
 const utilities = require("../utilities")
 
 /* ****************************************

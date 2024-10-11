@@ -235,7 +235,9 @@ label {
 }
 
 /* Input styles */
-input[type="email"],
+input[type="firstname"]
+input[type="lastname"]
+input[type="email"]
 input[type="password"] {
   width: 100%; /* Full width inputs */
   padding: 12px; /* Inner padding */
@@ -245,6 +247,8 @@ input[type="password"] {
 }
 
 /* Focus effect for inputs */
+input[type="firstname"]:focus,
+input[type="lastname"]:focus,
 input[type="email"]:focus,
 input[type="password"]:focus {
   border-color: #007BFF; /* Blue border on focus */
@@ -263,8 +267,23 @@ input[type="password"]:focus {
   transition: background-color 0.3s; /* Smooth transition */
 }
 
+.register-btn {
+  background-color: #007BFF; /* Blue background */
+  color: white; /* White text */
+  padding: 12px; /* Inner padding */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-size: 16px; /* Larger font size */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
 /* Hover effect for the button */
 .submit-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+.register-btn:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 

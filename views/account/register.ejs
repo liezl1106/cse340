@@ -1,44 +1,47 @@
 <% if (errors) { %>
     <ul class="notice">
-   <% errors.array().forEach(error => { %>
-     <li><%= error.msg %></li>
-  <%  }) %>
-   </ul>
-  <% } %>
+        <% errors.array().forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>
+
 <div class="form-container">
     <form class="login-form" action="/account/register" method="post"> 
         <h2>Register</h2>
         <div class="form-group">
             <label for="firstname">First Name</label>
-            <input type="firstname" id="firstname" name="account_firstname" required>
+            <input type="text" id="firstname" name="account_firstname" required value="<%= locals.account_firstname %>">
         </div>
         <div class="form-group">
             <label for="lastname">Last Name</label>
-            <input type="lastname" id="lastname" name="account_lastname" required>
+            <input type="text" id="lastname" name="account_lastname" required value="<%= locals.account_lastname %>">
         </div>
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="account_email" required>
+            <input type="email" id="email" name="account_email" required value="<%= locals.account_email %>">
         </div>
         <div class="form-group">
             <label for="password">Password</label>
             <input type="password" id="password" name="account_password" required>
+            <span class="reveal-button" id="passwordHide"></span>
         </div>
-        <button type="register" class="register-btn">Register</button>
+        <button type="submit" class="register-btn">Register</button>
     </form>
 </div>
+
 <!-- Script to handle hiding and revealing password field -->
 <script>
     const passwordInput = document.querySelector("#password");
     const passwordHide = document.querySelector("#passwordHide");
+
     passwordHide.addEventListener("click", () => {
-        if(passwordInput.getAttribute("type") == "password" ) {
+        if(passwordInput.getAttribute("type") === "password") {
             passwordInput.setAttribute("type", "text");
             passwordHide.classList.remove("active");
-        }
-        else {
+        } else {
             passwordInput.setAttribute("type", "password");
             passwordHide.classList.add("active");
         }
-    })
+    });
 </script>

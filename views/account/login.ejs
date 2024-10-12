@@ -1,30 +1,32 @@
 <div class="form-container">
-    <form class="login-form" action="/account/submit" method="post"> 
+    <form class="login-form" action="/account/login" method="post"> 
         <h2>Login</h2>
         <div class="form-group">
             <label for="email">Email Address</label>
-            <input type="email" id="email" name="account_email" required>
+            <input type="email" id="email" name="account_email" required value="<%= locals.account_email %>">
         </div>
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="account_password" required autocomplete="current-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$"><span class="reveal-button active" id="passwordHide"></span>
+            <input type="password" id="password" name="account_password" required autocomplete="current-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$">
+            <span class="reveal-button active" id="passwordHide"></span>
         </div>
         <button type="submit" class="submit-btn">Submit</button>
     </form>
     <p>No account? <a href="/account/register">Sign-up</a></p>
 </div>
+
 <!-- Script to handle hiding and revealing password field -->
 <script>
     const passwordInput = document.querySelector("#password");
     const passwordHide = document.querySelector("#passwordHide");
+
     passwordHide.addEventListener("click", () => {
-        if(passwordInput.getAttribute("type") == "password" ) {
+        if(passwordInput.getAttribute("type") === "password") {
             passwordInput.setAttribute("type", "text");
             passwordHide.classList.remove("active");
-        }
-        else {
+        } else {
             passwordInput.setAttribute("type", "password");
             passwordHide.classList.add("active");
         }
-    })
+    });
 </script>

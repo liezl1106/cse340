@@ -1,3 +1,4 @@
+const { validationResult } = require('express-validator')
 const invModel = require("../models/inventory-model")
 const utilities = require("../utilities")
 
@@ -10,7 +11,7 @@ invCont.buildByClassificationId = async (req, res) => {
   const { classificationId } = req.params
 
   try {
-    const data = await invModel.getInventoryByClassificationId(classificationId);
+    const data = await invModel.getInventoryByClassificationId(classificationId)
     const nav = await utilities.getNav()
 
     const grid = data.length 
@@ -22,14 +23,14 @@ invCont.buildByClassificationId = async (req, res) => {
       title: `${className} vehicles`,
       nav,
       grid,
-    });
+    })
   } catch (error) {
     console.error("Error fetching classification data:", error)
     res.status(500).render("errors/error", {
       title: "Internal Server Error",
       message: "An error occurred while fetching data.",
       nav: await utilities.getNav(),
-    });
+    })
   }
 }
 
@@ -71,27 +72,86 @@ invCont.getVehicleDetail = async (req, res) => {
  * ************************** */
 invCont.manageInventory = async (req, res) => {
   try {
-    // Fetch classifications and inventory list
     const classifications = await invModel.getClassifications()
-    const inventoryItems = await invModel.getAllInventory()
+    const inventoryItems = await invModel.getAllInventory();
+    const classificationSelect = await utilities.buildClassificationSelect(classifications)
     const nav = await utilities.getNav()
 
-    // Render the inventory management page
     res.render("inventory/manage-inventory", {
       title: "Inventory Management",
-      classifications,  // Pass classifications to the view for dropdown
-      inventoryItems,   // Pass inventory items to display
+      classifications,
+      inventoryItems,
+      classificationSelect,
       nav,
-      messages: req.flash("info"),  // Handle flash messages if any
-      errors: req.flash("errors"),  // Handle validation errors if any
-    })
+      messages: req.flash("info"),
+      errors: req.flash("errors"),
+    });
   } catch (error) {
-    console.error("Error fetching inventory management data:", error);
+    console.error("Error fetching inventory management data:", error)
     res.status(500).render("errors/error", {
       title: "Internal Server Error",
       message: "An error occurred while fetching inventory management data.",
       nav: await utilities.getNav(),
     })
+  }
+}
+
+/* ***************************
+ *  Add a new classification
+ * ************************** */
+invCont.addClassification = async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    req.flash("errors", errors.array())
+    return res.redirect("/inv/add-classification")
+  }
+
+  try {
+    await invModel.addClassification(req.body.classification_name)
+    req.flash("info", "Classification added successfully!")
+    res.redirect("/inv/manage-inventory")
+  } catch (error) {
+    console.error("Error adding classification:", error)
+    req.flash("errors", [{ msg: "Error adding classification. Please try again." }])
+    res.redirect("/inv/add-classification")
+  }
+}
+
+/* ***************************
+ *  Add a new inventory item
+ * ************************** */
+invCont.addInventory = async (req, res) => {
+  const errors = validationResult(req)
+  if (!errors.isEmpty()) {
+    // If there are validation errors, render the form again with errors and the submitted data
+    req.flash("errors", errors.array())
+    const classifications = await invModel.getClassifications()  // Get classifications for the dropdown
+    return res.render("inventory/add-inventory", {
+      title: "Add Vehicle",
+      inv_make: req.body.inv_make,
+      inv_model: req.body.inv_model,
+      inv_year: req.body.inv_year,
+      inv_description: req.body.inv_description,
+      inv_image: req.body.inv_image,
+      inv_thumbnail: req.body.inv_thumbnail,
+      inv_price: req.body.inv_price,
+      inv_miles: req.body.inv_miles,
+      inv_color: req.body.inv_color,
+      classification_id: req.body.classification_id,  // Preserve the classification
+      classifications,
+      messages: req.flash("info"),
+      errors: req.flash("errors"),
+    })
+  }
+
+  try {
+    await invModel.addInventory(req.body)
+    req.flash("info", "Vehicle added successfully!")
+    res.redirect("/inv/manage-inventory")
+  } catch (error) {
+    console.error("Error adding vehicle:", error)
+    req.flash("errors", [{ msg: "Error adding vehicle. Please try again." }])
+    res.redirect("/inv/add-inventory")
   }
 }
 

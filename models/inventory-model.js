@@ -1,4 +1,4 @@
-const pool = require("../database/")
+const pool = require("../database/");
 
 /* ***************************
  *  Get all classification data
@@ -9,15 +9,19 @@ async function getClassifications() {
   )
 }
 
+/* ***************************
+ *  Add a new classification
+ * ************************** */
 async function addClassification(classification_name) {
-  // ..for insertion to the database.
   const sql = `INSERT INTO public.classification (classification_name) 
-    VALUES ($1)`
+    VALUES ($1) RETURNING classification_id`;
 
   try {
-    return await pool.query(sql, [classification_name]);
+    const result = await pool.query(sql, [classification_name])
+    return result.rows[0].classification_id; // Return the new classification ID
   } catch (error) {
-    return error.message
+    console.error("addClassification error: " + error)
+    throw error; // Re-throw the error for handling in the controller
   }
 }
 
@@ -32,11 +36,11 @@ async function getInventoryByClassificationId(classification_id) {
       ON i.classification_id = c.classification_id 
       WHERE i.classification_id = $1`,
       [classification_id]
-    )
+    );
     return data.rows
   } catch (error) {
     console.error("getInventoryByClassificationId error: " + error)
-    throw error // Re-throw the error for handling in the controller
+    throw error; // Re-throw the error for handling in the controller
   }
 }
 
@@ -52,61 +56,45 @@ async function getInventoryByInventoryId(inventoryId) {
         WHERE inv_id = $1`,
       [inventoryId]
     );
-    return data.rows[0]; // Return the first row or null if not found
+    return data.rows[0] // Return the first row or null if not found
   } catch (error) {
     console.error("getInventoryByInventoryId error: " + error)
     throw error; // Re-throw the error for handling in the controller
   }
 }
 
-/*******************************
- * Add a single inventory item
- *******************************/
-async function addInventory(
-  inv_make,
-  inv_model,
-  inv_year,
-  inv_description,
-  inv_image,
-  inv_thumbnail,
-  inv_price,
-  inv_miles,
-  inv_color,
-  classification_id
-) {
+/* ***************************
+ *  Add a single inventory item
+ * ************************** */
+async function addInventory(item) {
   const sql = `INSERT INTO public.inventory 
-    ( inv_make,
-      inv_model, 
-      inv_year, 
-      inv_description, 
-      inv_image, 
-      inv_thumbnail, 
-      inv_price, 
-      inv_miles, 
-      inv_color, 
-      classification_id)
-      VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )`;
+    (inv_make, inv_model, inv_year, inv_description, 
+    inv_image, inv_thumbnail, inv_price, inv_miles, 
+    inv_color, classification_id)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`
+
   try {
-    return await pool.query(sql, [
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id,
-    ]);
+    await pool.query(sql, [
+      item.inv_make,
+      item.inv_model,
+      item.inv_year,
+      item.inv_description,
+      item.inv_image,
+      item.inv_thumbnail,
+      item.inv_price,
+      item.inv_miles,
+      item.inv_color,
+      item.classification_id,
+    ])
   } catch (error) {
     console.error("addInventory error: " + error)
-    throw error // Re-throw the error for handling in the controller
+    throw error; // Re-throw the error for handling in the controller
   }
 }
 
 module.exports = {
   getClassifications,
+  addClassification,
   getInventoryByClassificationId,
   getInventoryByInventoryId,
   addInventory,

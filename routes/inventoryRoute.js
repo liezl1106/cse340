@@ -10,13 +10,6 @@ router.get("/type/:classificationId", invController.buildByClassificationId)
 // Route for specific vehicle detail view
 router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail))
 
-// Intentional error route
-router.get("/ierror", (req, res, next) => {
-  const error = new Error("This is a 500 error!")
-  error.status = 500
-  next(error); // Pass the error to the next middleware
-});
-
 // Route to view the inventory management page
 router.get('/inv', invController.manageInventory);
 
@@ -35,10 +28,11 @@ router.post('/add-classification', validate.registationRules(), validate.checkRe
 
 // Route to render the page to add a new inventory item
 router.get('/add-inventory', async (req, res) => {
-  const classifications = await invController.getClassifications() // Retrieve classifications for the dropdown
+  const classifications = await invController.getClassifications(); // Retrieve classifications for the dropdown
+  const nav = await utilities.getNav(); // Await this call to get the correct result
   res.render("inventory/add-inventory", {
     title: "Add Inventory",
-    nav: utilities.getNav(),
+    nav,
     classifications,
     messages: req.flash("info"),
     errors: req.flash("errors"),
@@ -46,8 +40,8 @@ router.get('/add-inventory', async (req, res) => {
 })
 
 // Route to handle the form submission for adding a new inventory item
-router.post('/add-inventory', 
-  validate.updateRules(), 
+router.post('/add-inventory',
+  validate.updateRules(),
   validate.checkUpdateData,
   invController.addInventory
 )

@@ -13,8 +13,11 @@ router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail)
 router.get("/ierror", (req, res, next) => {
     // Intentionally throw an error
     const error = new Error("This is a 500 error!")
-    error.status = 500;
-    next(error); // Pass the error to the next middleware
+    error.status = 500
+    next(error) // Pass the error to the next middleware
 })
+
+// Route to view the inventory management page
+router.get('/inv', invController.manageInventory)
 
 module.exports = router

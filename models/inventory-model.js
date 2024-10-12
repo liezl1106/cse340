@@ -6,11 +6,23 @@ const pool = require("../database/")
 async function getClassifications() {
   return await pool.query(
     "SELECT * FROM public.classification ORDER BY classification_name"
-  );
+  )
+}
+
+async function addClassification(classification_name) {
+  // ..for insertion to the database.
+  const sql = `INSERT INTO public.classification (classification_name) 
+    VALUES ($1)`
+
+  try {
+    return await pool.query(sql, [classification_name]);
+  } catch (error) {
+    return error.message
+  }
 }
 
 /* ***************************
- *  Get all inventory items by classification_id
+ *  Get all inventory items and classification_name by classification_id
  * ************************** */
 async function getInventoryByClassificationId(classification_id) {
   try {
@@ -20,11 +32,11 @@ async function getInventoryByClassificationId(classification_id) {
       ON i.classification_id = c.classification_id 
       WHERE i.classification_id = $1`,
       [classification_id]
-    );
-    return data.rows;
+    )
+    return data.rows
   } catch (error) {
     console.error("getInventoryByClassificationId error: " + error)
-    throw error; // Re-throw the error for handling in the controller
+    throw error // Re-throw the error for handling in the controller
   }
 }
 
@@ -89,7 +101,7 @@ async function addInventory(
     ]);
   } catch (error) {
     console.error("addInventory error: " + error)
-    throw error; // Re-throw the error for handling in the controller
+    throw error // Re-throw the error for handling in the controller
   }
 }
 

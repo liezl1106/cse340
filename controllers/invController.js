@@ -48,21 +48,50 @@ invCont.getVehicleDetail = async (req, res) => {
         title: "Vehicle Not Found",
         message: "The vehicle you are looking for does not exist.",
         nav,
-      });
+      })
     }
 
     res.render("inventory/vehicleDetail", {
       title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
       vehicle: vehicleData,
       nav,
-    });
+    })
   } catch (error) {
     console.error("Error fetching vehicle details:", error)
     res.status(500).render("errors/error", {
       title: "Internal Server Error",
       message: "An error occurred while fetching vehicle details.",
       nav: await utilities.getNav(),
-    });
+    })
+  }
+}
+
+/* ***************************
+ *  Manage Inventory
+ * ************************** */
+invCont.manageInventory = async (req, res) => {
+  try {
+    // Fetch classifications and inventory list
+    const classifications = await invModel.getClassifications()
+    const inventoryItems = await invModel.getAllInventory()
+    const nav = await utilities.getNav()
+
+    // Render the inventory management page
+    res.render("inventory/manage-inventory", {
+      title: "Inventory Management",
+      classifications,  // Pass classifications to the view for dropdown
+      inventoryItems,   // Pass inventory items to display
+      nav,
+      messages: req.flash("info"),  // Handle flash messages if any
+      errors: req.flash("errors"),  // Handle validation errors if any
+    })
+  } catch (error) {
+    console.error("Error fetching inventory management data:", error);
+    res.status(500).render("errors/error", {
+      title: "Internal Server Error",
+      message: "An error occurred while fetching inventory management data.",
+      nav: await utilities.getNav(),
+    })
   }
 }
 

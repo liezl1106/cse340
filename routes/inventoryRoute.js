@@ -15,6 +15,7 @@ router.get('/inv', invController.manageInventory)
 
 // Route to render the page to add a new classification
 router.get('/add-classification', (req, res) => {
+  console.log("Rendering 'add-classification' view...")
   res.render("inventory/add-classification", {
     title: "Add Classification",
     nav: utilities.getNav(),

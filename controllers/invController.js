@@ -83,9 +83,9 @@ invCont.manageInventory = async (req, res) => {
       inventoryItems,
       classificationSelect,
       nav,
-      messages: req.flash("info"),
-      errors: req.flash("errors"),
-    });
+      //messages: req.flash("info"),
+      //errors: req.flash("errors"),
+    })
   } catch (error) {
     console.error("Error fetching inventory management data:", error)
     res.status(500).render("errors/error", {

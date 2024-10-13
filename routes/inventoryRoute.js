@@ -11,7 +11,7 @@ router.get("/type/:classificationId", invController.buildByClassificationId)
 router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail))
 
 // Route to view the inventory management page
-router.get('/inv', invController.manageInventory);
+router.get('/inv', invController.manageInventory)
 
 // Route to render the page to add a new classification
 router.get('/add-classification', (req, res) => {
@@ -24,19 +24,32 @@ router.get('/add-classification', (req, res) => {
 })
 
 // Route to handle the form submission for adding a new classification
-router.post('/add-classification', validate.registationRules(), validate.checkRegData, invController.addClassification)
+router.post('/add-classification', 
+  validate.registationRules(), 
+  validate.checkRegData, 
+  invController.addClassification
+)
 
 // Route to render the page to add a new inventory item
 router.get('/add-inventory', async (req, res) => {
-  const classifications = await invController.getClassifications(); // Retrieve classifications for the dropdown
-  const nav = await utilities.getNav(); // Await this call to get the correct result
-  res.render("inventory/add-inventory", {
-    title: "Add Inventory",
-    nav,
-    classifications,
-    messages: req.flash("info"),
-    errors: req.flash("errors"),
-  })
+  try {
+    const classifications = await invController.getClassifications() // Retrieve classifications for the dropdown
+    const nav = await utilities.getNav() // Await this call to get the correct result
+    res.render("inventory/add-inventory", {
+      title: "Add Inventory",
+      nav,
+      classifications,
+      messages: req.flash("info"),
+      errors: req.flash("errors"),
+    })
+  } catch (error) {
+    console.error("Error fetching classifications:", error);
+    res.status(500).render("errors/error", {
+      title: "Internal Server Error",
+      message: "An error occurred while fetching classifications.",
+      nav: await utilities.getNav(),
+    })
+  }
 })
 
 // Route to handle the form submission for adding a new inventory item

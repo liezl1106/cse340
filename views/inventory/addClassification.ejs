@@ -1,14 +1,21 @@
 <h1><%- title %></h1>
-<%- messages() %>
 
-<% if (errors) { %>
+<!-- Display Flash Messages if they exist -->
+<% if (messages.info) { %>
+  <div class="notice">
+    <p><%= messages.info %></p>
+  </div>
+<% } %>
+
+<% if (messages.errors && messages.errors.length) { %>
   <ul class="notice">
-    <% errors.array().forEach(error => { %>
+    <% messages.errors.forEach(error => { %>
       <li><%= error.msg %></li>
     <% }) %>
   </ul>
 <% } %>
 
+<!-- Form for adding a new classification -->
 <form class="input-box" action="/inv/add-classification" method="post">
   <label>
     CLASSIFICATION NAME

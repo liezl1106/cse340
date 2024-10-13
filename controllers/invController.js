@@ -72,19 +72,23 @@ invCont.getVehicleDetail = async (req, res) => {
  * ************************** */
 invCont.manageInventory = async (req, res) => {
   try {
+    // Get classifications for the dropdown and all inventory items
     const classifications = await invModel.getClassifications()
-    const inventoryItems = await invModel.getAllInventory();
+    const inventoryItems = await invModel.getAllInventory()
+
+    // Build the classification select dropdown
     const classificationSelect = await utilities.buildClassificationSelect(classifications)
     const nav = await utilities.getNav()
 
-    res.render("inventory/manage-inventory", {
+    // Render the management page with the inventory data
+    res.render("inventory/management", {
       title: "Inventory Management",
       classifications,
       inventoryItems,
       classificationSelect,
       nav,
-      //messages: req.flash("info"),
-      //errors: req.flash("errors"),
+      messages: req.flash("info"),
+      errors: req.flash("errors"),
     })
   } catch (error) {
     console.error("Error fetching inventory management data:", error)

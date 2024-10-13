@@ -16,7 +16,7 @@ router.get('/inv', invController.manageInventory)
 // Route to render the page to add a new classification
 router.get('/add-classification', (req, res) => {
   console.log("Rendering 'add-classification' view...")
-  res.render("inventory/add-classification", {
+  res.render("inventory/addClassification", {
     title: "Add Classification",
     nav: utilities.getNav(),
     messages: req.flash("info"),
@@ -36,7 +36,7 @@ router.get('/add-inventory', async (req, res) => {
   try {
     const classifications = await invController.getClassifications() // Retrieve classifications for the dropdown
     const nav = await utilities.getNav() // Await this call to get the correct result
-    res.render("inventory/add-inventory", {
+    res.render("inventory/AddInventory", {
       title: "Add Inventory",
       nav,
       classifications,
@@ -44,7 +44,7 @@ router.get('/add-inventory', async (req, res) => {
       errors: req.flash("errors"),
     })
   } catch (error) {
-    console.error("Error fetching classifications:", error);
+    console.error("Error fetching classifications:", error)
     res.status(500).render("errors/error", {
       title: "Internal Server Error",
       message: "An error occurred while fetching classifications.",

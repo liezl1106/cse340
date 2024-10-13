@@ -6,7 +6,7 @@ const Util = {}
  ************************** */
 Util.getNav = async function () {
   try {
-    const data = await invModel.getClassifications()
+    const data = await invModel.getClassifications();
     let list = "<ul>"
     list += '<li><a href="/" title="Home page">Home</a></li>'
 
@@ -26,10 +26,10 @@ Util.getNav = async function () {
     list += "</ul>"
     return list
   } catch (error) {
-    console.error("Error fetching classifications:", error)
+    console.error("Error fetching classifications:", error);
     return "<ul><li>Error fetching classifications</li></ul>"
   }
-}
+};
 
 /* **************************************
  * Build the classification view HTML
@@ -39,7 +39,7 @@ Util.buildClassificationGrid = async function (data) {
     let grid = '<ul id="inv-display">'
     
     data.forEach((vehicle) => {
-      const { inv_id, inv_make, inv_model, inv_thumbnail, inv_price } = vehicle;
+      const { inv_id, inv_make, inv_model, inv_thumbnail, inv_price } = vehicle
       grid += `
         <li>
           <a href="/inv/detail/${inv_id}" title="View ${inv_make} ${inv_model} details">
@@ -54,12 +54,12 @@ Util.buildClassificationGrid = async function (data) {
             </h2>
             <span>$${new Intl.NumberFormat('en-US').format(inv_price)}</span>
           </div>
-        </li>`
+        </li>`;
     })
     grid += "</ul>"
-    return grid
+    return grid;
   } else {
-    return '<p class="notice">Sorry, no matching vehicles could be found.</p>';
+    return '<p class="notice">Sorry, no matching vehicles could be found.</p>'
   }
 }
 
@@ -85,6 +85,26 @@ Util.formatVehicleInfo = function (vehicle) {
     description: vehicle.inv_description,
     image: vehicle.inv_image,
   }
+}
+
+/* **************************************
+ * Build the classification dropdown list
+ ************************************** */
+Util.buildClassificationSelect = async function (selectedClassificationId = null) {
+  const classifications = await invModel.getClassifications();
+  let classificationSelect = '<select name="classification_id" id="classificationList" required>'
+  classificationSelect += "<option value=''>Choose a Classification</option>";  // Placeholder
+  
+  classifications.rows.forEach((classification) => {
+    classificationSelect += `
+      <option value="${classification.classification_id}" 
+        ${selectedClassificationId && classification.classification_id == selectedClassificationId ? 'selected' : ''}>
+        ${classification.classification_name}
+      </option>`;
+  });
+  
+  classificationSelect += "</select>"
+  return classificationSelect;
 }
 
 module.exports = Util

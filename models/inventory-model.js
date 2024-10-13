@@ -4,16 +4,9 @@ const pool = require("../database/");
  *  Get all classification data
  * ************************** */
 async function getClassifications() {
-  try {
-    const result = await pool.query(
-      "SELECT * FROM public.classification ORDER BY classification_name"
-    );
-    return result.rows; // Return the rows directly
-  } catch (error) {
-    console.error("Database query error in getClassifications:", error.message); // Log the error message
-    console.error("Full error object:", error); // Log the full error object
-    throw error; // Re-throw the error for handling in the controller
-  }
+  return await pool.query(
+    "SELECT * FROM public.classification ORDER BY classification_name"
+  )
 }
 
 /* ***************************

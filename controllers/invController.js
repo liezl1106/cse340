@@ -6,7 +6,7 @@ const invCont = {};
 
 /* ***************************
  *  Build inventory by classification view
- * ************************** */
+ *************************** */
 invCont.buildByClassificationId = async (req, res) => {
   const { classificationId } = req.params;
 
@@ -36,7 +36,7 @@ invCont.buildByClassificationId = async (req, res) => {
 
 /* ***************************
  *  Get vehicle detail by ID
- * ************************** */
+ *************************** */
 invCont.getVehicleDetail = async (req, res) => {
   const { id: vehicleId } = req.params;
 
@@ -69,11 +69,11 @@ invCont.getVehicleDetail = async (req, res) => {
 
 /* ***************************
  *  Build the main vehicle management view
- * ************************** */
+ *************************** */
 invCont.buildManagementView = async (req, res) => {
   const nav = await utilities.getNav();
   const classificationSelect = await utilities.buildClassificationList();
-  
+
   res.render("inventory/management", {
     title: "Vehicle Management",
     errors: null,
@@ -83,8 +83,8 @@ invCont.buildManagementView = async (req, res) => {
 };
 
 /* ***************************
- *  Build the main vehicle management view
- * ************************** */
+ *  Build the add classification view
+ *************************** */
 invCont.buildAddClassification = async (req, res) => {
   const nav = await utilities.getNav();
 
@@ -97,15 +97,17 @@ invCont.buildAddClassification = async (req, res) => {
 
 /* ***************************
  *  Handle post request to add a vehicle classification
- * ************************** */
-invCont.addClassification = async (req, res) => {
+ *************************** */
+invCont.addClassification = async function (req, res, next) {
   const { classification_name } = req.body;
 
-  const response = await invModel.addClassification(classification_name);
-  const nav = await utilities.getNav();
-  
+  const response = await invModel.addClassification(classification_name); // ...to a function within the inventory model...
+  let nav = await utilities.getNav(); // After query, so it shows new classification
   if (response) {
-    req.flash("notice", `The "${classification_name}" classification was successfully added.`);
+    req.flash(
+      "notice",
+      `The "${classification_name}" classification was successfully added.`
+    );
     res.render("inventory/management", {
       title: "Vehicle Management",
       errors: null,
@@ -125,10 +127,10 @@ invCont.addClassification = async (req, res) => {
 
 /* ***************************
  *  Build the add inventory view
- * ************************** */
-invCont.buildAddInventory = async (req, res) => {
+ *************************** */
+invCont.buildAddInventory = async function (req, res, next) {
   const nav = await utilities.getNav();
-  const classifications = await utilities.buildClassificationList();
+  let classifications = await utilities.buildClassificationList();
 
   res.render("inventory/addInventory", {
     title: "Add Vehicle",
@@ -139,10 +141,11 @@ invCont.buildAddInventory = async (req, res) => {
 };
 
 /* ***************************
- *  Handle post request to add a vehicle to the inventory along with redirects
- * ************************** */
-invCont.addInventory = async (req, res) => {
+ *  Handle post request to add a vehicle to the inventory
+ *************************** */
+invCont.addInventory = async function (req, res, next) {
   const nav = await utilities.getNav();
+
   const {
     inv_make,
     inv_model,
@@ -170,7 +173,10 @@ invCont.addInventory = async (req, res) => {
   );
 
   if (response) {
-    req.flash("notice", `The ${inv_year} ${inv_make} ${inv_model} successfully added.`);
+    req.flash(
+      "notice",
+      `The ${inv_year} ${inv_make} ${inv_model} successfully added.`
+    );
     const classificationSelect = await utilities.buildClassificationList(classification_id);
     res.render("inventory/management", {
       title: "Vehicle Management",
@@ -179,6 +185,7 @@ invCont.addInventory = async (req, res) => {
       errors: null,
     });
   } else {
+    // This seems to never get called. Is this just for DB errors?
     req.flash("notice", "There was a problem.");
     res.render("inventory/addInventory", {
       title: "Add Vehicle",

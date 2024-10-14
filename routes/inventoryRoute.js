@@ -10,9 +10,6 @@ router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail)
 // Route to view the inventory management page
 router.get("/management", utilities.handleErrors(invController.buildManagementView)); // Corrected route
 
-// Authorization middleware for specific routes
-router.use(["/add-classification", "/add-inventory"], utilities.checkAuthorizationManager);
-
 // Classification management routes
 router.get("/add-classification", utilities.handleErrors(invController.buildAddClassification));
 router.post("/add-classification", 

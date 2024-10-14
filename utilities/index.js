@@ -73,18 +73,6 @@ Util.handleErrors = (fn) => (req, res, next) => {
 };
 
 /* **************************************
- * Middleware to check if user is authorized as a manager
- ************************************** */
-Util.checkAuthorizationManager = (req, res, next) => {
-  // Example logic; replace with your actual authorization check
-  if (req.user && req.user.role === 'manager') {
-    return next(); // User is authorized
-  }
-  // If not authorized, send a 403 response
-  return res.status(403).send("Unauthorized access");
-};
-
-/* **************************************
  * Format vehicle info for detail view
  ************************************** */
 Util.formatVehicleInfo = function (vehicle) {

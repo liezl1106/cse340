@@ -201,7 +201,7 @@ main {
   font-size: 24px;
 }
 
-/* Container for the form */
+/* Styles for the form */
 .form-container {
   background-color: #ffffff; /* White background for the form */
   border-radius: 10px; /* Rounded corners */
@@ -210,55 +210,35 @@ main {
   width: 350px; /* Set a fixed width */
 }
 
-/* Styles for the form */
-.login-form {
-  display: flex; /* Use flexbox for layout */
-  flex-direction: column; /* Arrange items in a column */
-}
-
-/* Header styles */
-h2 {
-  margin-bottom: 25px; /* Space below the heading */
-  text-align: center; /* Center align the heading */
-  color: #333; /* Dark gray color for the heading */
-}
-
-/* Grouping for form elements */
-.form-group {
-  margin-bottom: 20px; /* Space below each group */
-}
-
-/* Label styles */
+/* Form styles for addClassification.ejs */
 label {
+  display: block; /* Make labels block elements */
   margin-bottom: 5px; /* Space below labels */
-  color: #555; /* Medium gray color for labels */
+  color: #110f0f; /* Medium gray color for labels */
 }
 
-/* Input styles */
-input[type="firstname"]
-input[type="lastname"]
-input[type="email"]
-input[type="password"] {
+input[type="text"] {
   width: 100%; /* Full width inputs */
   padding: 12px; /* Inner padding */
   border: 1px solid #ccc; /* Light gray border */
   border-radius: 5px; /* Rounded corners */
   font-size: 16px; /* Larger font size */
+  margin-bottom: 10px; /* Space below inputs */
 }
 
-/* Focus effect for inputs */
-input[type="firstname"]:focus,
-input[type="lastname"]:focus,
-input[type="email"]:focus,
-input[type="password"]:focus {
-  border-color: #007BFF; /* Blue border on focus */
-  outline: none; /* Remove default outline */
+/* Error message styles */
+.notice {
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 5px;
 }
 
 /* Button styles */
-.submit-btn {
-  background-color: #007BFF; /* Blue background */
-  color: white; /* White text */
+input[type="submit"] {
+  background-color: #4baef9; /* Blue background */
+  color: rgb(27, 26, 26); /* White text */
   padding: 12px; /* Inner padding */
   border: none; /* Remove default border */
   border-radius: 5px; /* Rounded corners */
@@ -267,23 +247,7 @@ input[type="password"]:focus {
   transition: background-color 0.3s; /* Smooth transition */
 }
 
-.register-btn {
-  background-color: #007BFF; /* Blue background */
-  color: white; /* White text */
-  padding: 12px; /* Inner padding */
-  border: none; /* Remove default border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Larger font size */
-  transition: background-color 0.3s; /* Smooth transition */
-}
-
-/* Hover effect for the button */
-.submit-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
-}
-
-.register-btn:hover {
+input[type="submit"]:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 
@@ -324,24 +288,13 @@ footer {
     padding: 10px;
   }
 
+  .form-container {
+    width: 90%; /* Responsive form width */
+  }
+
   .text-img {
     flex-direction: column; 
     align-items: center; 
-  }
-
-  .text-area {
-    width: 100%;  
-    padding: 10px;
-  }
-
-  .img-area-1 {
-    margin-left: 0; 
-    width: 100%; 
-  }
-
-  .img-area-1 img {
-    width: 100%; 
-    height: auto; 
   }
 
   .flex-container {
@@ -389,23 +342,8 @@ footer {
     justify-content: space-between; 
   }
 
-  .text-area {
-    width: 60%; 
-    padding: 15px; 
-  }
-
-  .img-area-1 {
-    width: 35%; 
-    margin-left: 10px; 
-  }
-
-  .img-area-1 img {
-    width: 100%; 
-    height: auto; 
-  }
-
-  .flex-container {
-    flex-direction: row;
+  .form-container {
+    width: 400px; /* Slightly larger for tablets */
   }
 
   .upgrade {
@@ -414,35 +352,5 @@ footer {
 
   .card {
     flex: 1 1 calc(50% - 20px); 
-  }
-}
-
-/* Responsive adjustments for Main Vehicle Details Page */
-@media (max-width: 600px) {
-  .inline-container {
-    flex-direction: column; /* Stack columns vertically */
-    align-items: center; /* Center align items */
-  }
-
-  .image-column {
-    margin-right: 0; /* Remove right margin in vertical layout */
-    margin-bottom: 10px; /* Add bottom margin for spacing */
-    width: 100%; /* Ensure full width */
-  }
-
-  .details-column {
-    flex: 1; /* Adjust details column to take full width */
-    width: 100%; 
-  }
-  
-  .form-group {
-    margin-bottom: 15px; /* Adjust spacing for groups */
-  }
-
-  input[type="email"],
-  input[type="password"],
-  .submit-btn {
-    font-size: 14px; /* Smaller font size for inputs and button */
-    padding: 10px; /* Reduce padding for inputs and button */
   }
 }

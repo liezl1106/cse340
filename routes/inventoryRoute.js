@@ -1,63 +1,32 @@
-const express = require("express")
-const router = express.Router()
-const invController = require("../controllers/invController")
-const utilities = require("../utilities")
-const validate = require("../utilities/account-validation")
-
-// Route to build inventory by classification view
-router.get("/type/:classificationId", invController.buildByClassificationId)
+const express = require("express");
+const router = new express.Router();
+const invController = require("../controllers/invController");
+const utilities = require("../utilities");
+const invValidate = require("../utilities/inventory-validation");
 
 // Route for specific vehicle detail view
-router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail))
+router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail));
 
 // Route to view the inventory management page
-router.get('/inv', invController.manageInventory)
+router.get("/management", utilities.handleErrors(invController.buildManagementView)); // Corrected route
 
-// Route to render the page to add a new classification
-router.get('/add-classification', (req, res) => {
-  console.log("Rendering 'add-classification' view...")
-  res.render("inventory/addClassification", {
-    title: "Add Classification",
-    nav: utilities.getNav(),
-    messages: req.flash("info"),
-    errors: req.flash("errors"),
-  })
-})
+// Authorization middleware for specific routes
+router.use(["/add-classification", "/add-inventory"], utilities.checkAuthorizationManager);
 
-// Route to handle the form submission for adding a new classification
-router.post('/add-classification', 
-  validate.registationRules(), 
-  validate.checkRegData, 
-  invController.addClassification
-)
+// Classification management routes
+router.get("/add-classification", utilities.handleErrors(invController.buildAddClassification));
+router.post("/add-classification", 
+  invValidate.classificationRules(), 
+  invValidate.checkClassificationData, 
+  utilities.handleErrors(invController.addClassification)
+);
 
-// Route to render the page to add a new inventory item
-router.get('/add-inventory', async (req, res) => {
-  try {
-    const classifications = await invController.getClassifications() // Retrieve classifications for the dropdown
-    const nav = await utilities.getNav() // Await this call to get the correct result
-    res.render("inventory/AddInventory", {
-      title: "Add Inventory",
-      nav,
-      classifications,
-      messages: req.flash("info"),
-      errors: req.flash("errors"),
-    })
-  } catch (error) {
-    console.error("Error fetching classifications:", error)
-    res.status(500).render("errors/error", {
-      title: "Internal Server Error",
-      message: "An error occurred while fetching classifications.",
-      nav: await utilities.getNav(),
-    })
-  }
-})
+// Inventory management routes
+router.get("/add-inventory", utilities.handleErrors(invController.buildAddInventory));
+router.post("/add-inventory", 
+  invValidate.inventoryRules(), 
+  invValidate.checkInventoryData, 
+  utilities.handleErrors(invController.addInventory)
+);
 
-// Route to handle the form submission for adding a new inventory item
-router.post('/add-inventory',
-  validate.updateRules(),
-  validate.checkUpdateData,
-  invController.addInventory
-)
-
-module.exports = router
+module.exports = router;

@@ -18,8 +18,8 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
+const messageRoute = require("./routes/messageRoute") // Add this line
 const utilities = require("./utilities/")
-
 
 /* ***********************
  * Server Static Files
@@ -28,7 +28,7 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 /* ***********************
  * Middleware
- * ************************/
+ ************************/
 app.use(session({
   store: new (require('connect-pg-simple')(session))({
     createTableIfMissing: true,
@@ -45,7 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 
 /* ***********************
  * Express Messages Middleware
- * ************************/
+ *************************/
 app.use(require('connect-flash')())
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
@@ -55,22 +55,24 @@ app.use(function(req, res, next){
 /* ***********************
  * View Engine and Templates
  *************************/
+app.set("view engine", "ejs")
 app.use(expressLayouts)
 app.set("layout", "./layouts/layout")
-app.set('views', path.join(__dirname, 'views'))
-app.set("view engine", "ejs")
 
 /* ***********************
  * Routes
  *************************/
-app.use(static)
+app.use(static);
 // Index route
-//app.get("/", baseController.buildHome)
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
 app.use("/inv", inventoryRoute)
-//Account routes
+// Account routes
 app.use("/account", accountRoute)
+// Message routes
+app.use("/message", messageRoute) // Ensure this line is correct
+
+// Intentional error route. Used for testing
 
 /* ***********************
  * File Not Found Route - must be last route in list

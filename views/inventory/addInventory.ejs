@@ -2,170 +2,167 @@
 
 <!-- Flash Message Display -->
 <% if (messages.info) { %>
-  <div class="notice success">
-    <p><%= messages.info %></p>
-  </div>
+    <div class="notice success">
+        <p><%= messages.info %></p>
+    </div>
 <% } %>
 
-<% if (messages.errors && messages.errors.length) { %>
-  <ul class="notice errors">
-    <% messages.errors.forEach(function(error) { %>
-      <li><%= error.msg %></li>
-    <% }) %>
-  </ul>
+<% if (errors && errors.length) { %>
+    <ul class="notice errors">
+        <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
 <% } %>
 
 <!-- Form to Add Inventory -->
 <form class="input-box" action="/inv/add-inventory" method="post" id="add-inventory-form" enctype="multipart/form-data">
+    <!-- Vehicle Make -->
+    <label for="inv_make">Make
+        <input 
+            type="text" 
+            id="inv_make" 
+            name="inv_make" 
+            value="<%- inv_make || '' %>" 
+            placeholder="Ford" 
+            minlength="2" 
+            maxlength="50" 
+            required 
+            pattern="[A-Za-z0-9\s]+" 
+            title="Only letters and numbers are allowed."
+        >
+        <span class="fine-print">Required. Letters and numbers only.</span>
+    </label>
 
-  <!-- Vehicle Make -->
-  <label for="inv_make">Make
-    <input 
-      type="text" 
-      id="inv_make" 
-      name="inv_make" 
-      value="<%- inv_make || '' %>" 
-      placeholder="Ford" 
-      minlength="2" 
-      maxlength="50"
-      required
-      pattern="[A-Za-z0-9\s]+"
-      title="Only letters and numbers are allowed."
-    >
-    <span class="fine-print">Required. Letters and numbers only.</span>
-  </label>
+    <!-- Vehicle Model -->
+    <label for="inv_model">Model
+        <input 
+            type="text" 
+            id="inv_model" 
+            name="inv_model" 
+            value="<%- inv_model || '' %>" 
+            placeholder="Mustang" 
+            minlength="2" 
+            maxlength="50" 
+            required 
+            pattern="[A-Za-z0-9\s]+" 
+            title="Only letters and numbers are allowed."
+        >
+        <span class="fine-print">Required. Letters and numbers only.</span>
+    </label>
 
-  <!-- Vehicle Model -->
-  <label for="inv_model">Model
-    <input 
-      type="text" 
-      id="inv_model" 
-      name="inv_model" 
-      value="<%- inv_model || '' %>" 
-      placeholder="Mustang" 
-      minlength="2" 
-      maxlength="50"
-      required
-      pattern="[A-Za-z0-9\s]+"
-      title="Only letters and numbers are allowed."
-    >
-    <span class="fine-print">Required. Letters and numbers only.</span>
-  </label>
+    <!-- Vehicle Year -->
+    <label for="inv_year">Year
+        <input 
+            type="number" 
+            id="inv_year" 
+            name="inv_year" 
+            value="<%- inv_year || '' %>" 
+            placeholder="2001" 
+            min="1900" 
+            max="2030" 
+            required
+        >
+        <span class="fine-print">Required. Year between 1900 and 2030.</span>
+    </label>
 
-  <!-- Vehicle Year -->
-  <label for="inv_year">Year
-    <input 
-      type="number" 
-      id="inv_year" 
-      name="inv_year" 
-      value="<%- inv_year || '' %>" 
-      placeholder="2001" 
-      min="1900" 
-      max="2030"
-      required
-    >
-    <span class="fine-print">Required. Year between 1900 and 2030.</span>
-  </label>
+    <!-- Vehicle Description -->
+    <label for="inv_description">Description
+        <textarea 
+            id="inv_description" 
+            name="inv_description" 
+            placeholder="Fancy and red." 
+            minlength="2" 
+            maxlength="100" 
+            rows="5" 
+            required
+        ><%- inv_description || '' %></textarea>
+        <span class="fine-print">Required. Max 100 characters.</span>
+    </label>
 
-  <!-- Vehicle Description -->
-  <label for="inv_description">Description
-    <textarea 
-      id="inv_description" 
-      name="inv_description" 
-      placeholder="Fancy and red." 
-      minlength="2" 
-      maxlength="100" 
-      rows="5"
-      required
-    ><%- inv_description || '' %></textarea>
-    <span class="fine-print">Required. Max 100 characters.</span>
-  </label>
+    <!-- Vehicle Image -->
+    <label for="inv_image">Image
+        <input 
+            type="text" 
+            id="inv_image" 
+            name="inv_image" 
+            value="<%- inv_image || '/images/vehicles/no-image.png' %>" 
+            placeholder="red_mustang.jpg" 
+            required
+        >
+        <span class="fine-print">Required. Use the path for "No Image Available".</span>
+    </label>
 
-  <!-- Vehicle Image -->
-  <label for="inv_image">Image
-    <input 
-      type="text" 
-      id="inv_image" 
-      name="inv_image" 
-      value="<%- inv_image || '/images/vehicles/no-image.png' %>" 
-      placeholder="red_mustang.jpg"
-      required
-    >
-    <span class="fine-print">Required. Use the path for "No Image Available".</span>
-  </label>
+    <!-- Vehicle Thumbnail -->
+    <label for="inv_thumbnail">Thumbnail
+        <input 
+            type="text" 
+            id="inv_thumbnail" 
+            name="inv_thumbnail" 
+            value="<%- inv_thumbnail || '/images/vehicles/no-image-tn.png' %>" 
+            placeholder="little_red_mustang.jpg" 
+            required
+        >
+        <span class="fine-print">Required. Use the path for "No Image Available".</span>
+    </label>
 
-  <!-- Vehicle Thumbnail -->
-  <label for="inv_thumbnail">Thumbnail
-    <input 
-      type="text" 
-      id="inv_thumbnail" 
-      name="inv_thumbnail" 
-      value="<%- inv_thumbnail || '/images/vehicles/no-image-tn.png' %>" 
-      placeholder="little_red_mustang.jpg"
-      required
-    >
-    <span class="fine-print">Required. Use the path for "No Image Available".</span>
-  </label>
+    <!-- Vehicle Price -->
+    <label for="inv_price">Price
+        <input 
+            type="number" 
+            id="inv_price" 
+            name="inv_price" 
+            value="<%- inv_price || '' %>" 
+            placeholder="15000" 
+            min="0" 
+            required
+        >
+        <span class="fine-print">Required. Numeric only.</span>
+    </label>
 
-  <!-- Vehicle Price -->
-  <label for="inv_price">Price
-    <input 
-      type="number" 
-      id="inv_price" 
-      name="inv_price" 
-      value="<%- inv_price || '' %>" 
-      placeholder="15000"
-      min="0"
-      required
-    >
-    <span class="fine-print">Required. Numeric only.</span>
-  </label>
+    <!-- Vehicle Miles -->
+    <label for="inv_miles">Miles
+        <input 
+            type="number" 
+            id="inv_miles" 
+            name="inv_miles" 
+            value="<%- inv_miles || '' %>" 
+            placeholder="100000" 
+            min="0" 
+            required
+        >
+        <span class="fine-print">Required. Numeric only.</span>
+    </label>
 
-  <!-- Vehicle Miles -->
-  <label for="inv_miles">Miles
-    <input 
-      type="number" 
-      id="inv_miles" 
-      name="inv_miles" 
-      value="<%- inv_miles || '' %>" 
-      placeholder="100000"
-      min="0"
-      required
-    >
-    <span class="fine-print">Required. Numeric only.</span>
-  </label>
+    <!-- Vehicle Color -->
+    <label for="inv_color">Color
+        <input 
+            type="text" 
+            id="inv_color" 
+            name="inv_color" 
+            value="<%- inv_color || '' %>" 
+            placeholder="Red" 
+            required
+        >
+        <span class="fine-print">Required. Only letters.</span>
+    </label>
 
-  <!-- Vehicle Color -->
-  <label for="inv_color">Color
-    <input 
-      type="text" 
-      id="inv_color" 
-      name="inv_color" 
-      value="<%- inv_color || '' %>" 
-      placeholder="Red"
-      required
-    >
-    <span class="fine-print">Required. Only letters.</span>
-  </label>
+    <!-- Classification Dropdown -->
+    <label for="classification_id">Classification
+        <%= classificationSelect %> <!-- Rendered dynamically by backend -->
+        <span class="fine-print">Required.</span>
+    </label>
 
-  <!-- Classification Dropdown -->
-  <label for="classification_id">Classification
-    <%= classificationSelect %> <!-- Rendered dynamically by backend -->
-    <span class="fine-print">Required.</span>
-  </label>
-
-  <!-- Submit Button -->
-  <input type="submit" value="Add Vehicle">
+    <!-- Submit Button -->
+    <input type="submit" value="Add Vehicle">
 </form>
 
 <script>
-  // Client-side form validation (if necessary)
-  document.getElementById('add-inventory-form').addEventListener('submit', function(event) {
-    // Example: Validate that classification is selected
-    const classification = document.querySelector("select[name='classification_id']").value;
-    if (!classification) {
-      event.preventDefault();
-      alert("Please select a classification.");
-    }
-  });
+    document.getElementById('add-inventory-form').addEventListener('submit', function(event) {
+        const classification = document.querySelector("select[name='classification_id']").value;
+        if (!classification) {
+            event.preventDefault();
+            alert("Please select a classification.");
+        }
+    });
 </script>

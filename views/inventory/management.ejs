@@ -1,12 +1,13 @@
 <h1><%- title %></h1>
 <%- messages() %>
-<% if (errors) { %>
+
+<% if (errors && errors.length) { %>
     <ul class="notice">
-   <% errors.array().forEach(error => { %>
-     <li><%= error.msg %></li>
-  <%  }) %>
-   </ul>
-  <% } %>
+        <% errors.forEach(error => { %>
+            <li><%= error.msg %></li>
+        <% }) %>
+    </ul>
+<% } %>
 
 <ul class="no-bullet">
     <li>
@@ -16,4 +17,3 @@
         <a href="/inv/add-inventory" class="btn">Add New Vehicle</a>
     </li>
 </ul>
-</div>

@@ -69,8 +69,8 @@ Util.buildClassificationGrid = async function (data) {
  * General Error Handling
  **************************************** */
 Util.handleErrors = (fn) => (req, res, next) => {
-  Promise.resolve(fn(req, res, next)).catch(next);
-};
+  Promise.resolve(fn(req, res, next)).catch(next)
+}
 
 /* **************************************
  * Format vehicle info for detail view
@@ -84,15 +84,15 @@ Util.formatVehicleInfo = function (vehicle) {
     mileage: new Intl.NumberFormat('en-US').format(vehicle.inv_miles),
     description: vehicle.inv_description,
     image: vehicle.inv_image,
-  };
-};
+  }
+}
 
 /* **************************************
  * Build the classification dropdown list
  ************************************** */
 Util.buildClassificationList = async function (selectedClassificationId = null) {
   const classifications = await invModel.getClassifications();
-  let classificationSelect = '<select name="classification_id" id="classificationList" required>';
+  let classificationSelect = '<select name="classification_id" id="classificationList" required>'
   classificationSelect += "<option value=''>Choose a Classification</option>"; // Placeholder
 
   classifications.rows.forEach((classification) => {
@@ -100,11 +100,11 @@ Util.buildClassificationList = async function (selectedClassificationId = null) 
       <option value="${classification.classification_id}" 
         ${selectedClassificationId && classification.classification_id == selectedClassificationId ? 'selected' : ''}>
         ${classification.classification_name}
-      </option>`;
+      </option>`
   });
 
-  classificationSelect += "</select>";
-  return classificationSelect;
-};
+  classificationSelect += "</select>"
+  return classificationSelect
+}
 
-module.exports = Util;
+module.exports = Util

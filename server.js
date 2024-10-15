@@ -6,7 +6,7 @@
 /* ***********************
  * Require Statements
  *************************/
-const bodyParser = require("body-parser")
+const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const pool = require('./database/')
 const express = require("express")
@@ -40,8 +40,7 @@ app.use(session({
   name: 'sessionId',
 }))
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true }))
+app.use(cookieParser())
 
 /* ***********************
  * Express Messages Middleware
@@ -70,9 +69,7 @@ app.use("/inv", inventoryRoute)
 // Account routes
 app.use("/account", accountRoute)
 // Message routes
-app.use("/message", messageRoute) // Ensure this line is correct
-
-// Intentional error route. Used for testing
+app.use("/message", messageRoute)
 
 /* ***********************
  * File Not Found Route - must be last route in list

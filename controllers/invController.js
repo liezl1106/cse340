@@ -47,34 +47,38 @@ invCont.buildByInventoryId = async function (req, res, next) {
 }
 
 /* ***************************
- *  Get vehicle Detail
- *************************** */
-invCont.getVehicleDetail = async function (req, res, next) {
+ *  Get vehicle detail by ID
+ * ************************** */
+invCont.getVehicleDetail = async (req, res) => {
+    const { id: vehicleId } = req.params
+  
     try {
-        const vehicleId = req.params.id; // Ensure this matches your route parameter
-        console.log(`Fetching details for vehicle ID: ${vehicleId}`) // Debug log
-
-        const data = await invModel.getInventoryByInventoryId(vehicleId) // Fetch the vehicle details
-
-        if (!data || data.length === 0) {
-            return res.status(404).send("Vehicle not found") // Handle case where no data is returned
-        }
-
-        const listing = await utilities.buildItemListing(data[0])
-        const nav = await utilities.getNav();
-        const itemName = `${data[0].inv_make} ${data[0].inv_model}`
-
-        res.render("inventory/listing", {
-            title: itemName,
-            nav,
-            listing,
-        });
+      const vehicleData = await invModel.getInventoryByInventoryId(vehicleId)
+      const nav = await utilities.getNav()
+  
+      if (!vehicleData) {
+        return res.status(404).render("errors/error", {
+          title: "Vehicle Not Found",
+          message: "The vehicle you are looking for does not exist.",
+          nav,
+        })
+      }
+  
+      res.render("inventory/vehicleDetail", {
+        title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
+        vehicle: vehicleData,
+        nav,
+      })
     } catch (error) {
-        console.error(error); // Log the error for debugging
-        next(error); // Pass errors to the error handling middleware
+      console.error("Error fetching vehicle details:", error)
+      res.status(500).render("errors/error", {
+        title: "Internal Server Error",
+        message: "An error occurred while fetching vehicle details.",
+        nav: await utilities.getNav(),
+      })
     }
-}
-
+  }
+  
 /* ***************************
  *  Build the main vehicle management view
  *************************** */

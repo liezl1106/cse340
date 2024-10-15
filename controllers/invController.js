@@ -7,64 +7,43 @@ const invCont = {}
 /* ***************************
  *  Build inventory by classification view
  *************************** */
-invCont.buildByClassificationId = async (req, res) => {
-  const { classificationId } = req.params;
+invCont.buildByClassificationId = async function (req, res, next) {
+  const classification_id = req.params.classificationId
+  const data = await invModel.getInventoryByClassificationId(classification_id)
 
-  try {
-    const data = await invModel.getInventoryByClassificationId(classificationId)
-    const nav = await utilities.getNav()
-
-    const grid = data.length 
-      ? await utilities.buildClassificationGrid(data) 
-      : ""
-    const className = data.length ? data[0].classification_name : "No vehicles found"
-
-    res.render("inventory/classification", {
-      title: `${className} vehicles`,
-      nav,
-      grid,
-    })
-  } catch (error) {
-    console.error("Error fetching classification data:", error)
-    res.status(500).render("errors/error", {
-      title: "Internal Server Error",
-      message: "An error occurred while fetching data.",
-      nav: await utilities.getNav(),
-    })
+  let grid
+  let className
+  if (data.length) {
+    grid = await utilities.buildClassificationGrid(data)
+    className = data[0].classification_name
+  } else {
+    grid = ""
+    className = "No"
   }
-};
+  let nav = await utilities.getNav();
+
+  res.render("inventory/classification", {
+    title: className + " vehicles",
+    nav,
+    grid,
+  })
+}
 
 /* ***************************
- *  Get vehicle detail by ID
+ *  Build the view to display a single vehicle
  *************************** */
-invCont.getVehicleDetail = async (req, res) => {
-  const { id: vehicleId } = req.params
+invCont.buildByInventoryId = async function (req, res, next) {
+  const inventoryId = req.params.inventoryId
+  const data = await invModel.getInventoryByInventoryId(inventoryId)
+  const listing = await utilities.buildItemListing(data[0])
+  let nav = await utilities.getNav()
+  const itemName = `${data[0].inv_make} ${data[0].inv_model}`
 
-  try {
-    const vehicleData = await invModel.getInventoryByInventoryId(vehicleId)
-    const nav = await utilities.getNav()
-
-    if (!vehicleData) {
-      return res.status(404).render("errors/error", {
-        title: "Vehicle Not Found",
-        message: "The vehicle you are looking for does not exist.",
-        nav,
-      })
-    }
-
-    res.render("inventory/vehicleDetail", {
-      title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
-      vehicle: vehicleData,
-      nav,
-    })
-  } catch (error) {
-    console.error("Error fetching vehicle details:", error);
-    res.status(500).render("errors/error", {
-      title: "Internal Server Error",
-      message: "An error occurred while fetching vehicle details.",
-      nav: await utilities.getNav(),
-    })
-  }
+  res.render("inventory/listing", {
+    title: itemName,
+    nav,
+    listing,
+  })
 }
 
 /* ***************************

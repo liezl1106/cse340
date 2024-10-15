@@ -18,7 +18,7 @@ const static = require("./routes/static")
 const baseController = require("./controllers/baseController")
 const inventoryRoute = require("./routes/inventoryRoute")
 const accountRoute = require("./routes/accountRoute")
-const messageRoute = require("./routes/messageRoute") // Add this line
+const messageRoute = require("./routes/messageRoute")
 const utilities = require("./utilities/")
 
 /* ***********************
@@ -41,7 +41,7 @@ app.use(session({
 }))
 
 app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: true }))
 
 /* ***********************
  * Express Messages Middleware

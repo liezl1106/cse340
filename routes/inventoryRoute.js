@@ -4,6 +4,9 @@ const invController = require("../controllers/invController")
 const utilities = require("../utilities")
 const invValidate = require("../utilities/inventory-validation")
 
+// Route to build inventory by classification view
+router.get("/type/:classificationId", utilities.handleErrors(invController.buildByClassificationId))
+
 // Route for specific vehicle detail view
 router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail))
 

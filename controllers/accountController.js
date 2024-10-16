@@ -1,4 +1,5 @@
 const accountModel = require("../models/account-model")
+const messageModel = require("../models/message-model")
 const utilities = require("../utilities")
 const bcrypt = require("bcryptjs")
 const jwt = require("jsonwebtoken")

@@ -6,7 +6,7 @@ const validate = {}
 /*  **********************************
   *  Registration Data Validation Rules
   * ********************************* */
-validate.registationRules = () => {
+validate.registrationRules = () => {
     return [
       // firstname is required and must be string
       body("account_firstname")
@@ -151,11 +151,11 @@ validate.updatePasswordRules = () => {
  * Check data and return errors or continue to registration
  * ***************************** */
 validate.checkRegData = async (req, res, next) => {
-    const { account_firstname, account_lastname, account_email } = req.body;
+    const { account_firstname, account_lastname, account_email } = req.body
     let errors = [];
-    errors = validationResult(req);
+    errors = validationResult(req)
     if (!errors.isEmpty()) {
-        let nav = await utilities.getNav();
+        let nav = await utilities.getNav()
         res.render("account/register", {
             errors,
             title: "Registration",
@@ -163,7 +163,7 @@ validate.checkRegData = async (req, res, next) => {
             account_firstname,
             account_lastname,
             account_email,
-        });
+        })
         return
     }
     next()

@@ -1,11 +1,3 @@
-/* ******************************************
- * This server.js file is the primary file of the 
- * application. It is used to control the project.
- *******************************************/
-
-/* ***********************
- * Require Statements
- *************************/
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const pool = require('./database/')
@@ -42,10 +34,16 @@ app.use(session({
 
 app.use(cookieParser())
 
+// ** Add body parsing middleware here **
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+
+app.use(utilities.checkJWTToken)
+
 /* ***********************
  * Express Messages Middleware
  *************************/
-app.use(require('connect-flash')())
+app.use(require('connect-flash')());
 app.use(function(req, res, next){
   res.locals.messages = require('express-messages')(req, res)
   next()
@@ -61,7 +59,7 @@ app.set("layout", "./layouts/layout")
 /* ***********************
  * Routes
  *************************/
-app.use(static);
+app.use(static)
 // Index route
 app.get("/", utilities.handleErrors(baseController.buildHome))
 // Inventory routes
@@ -76,14 +74,14 @@ app.use("/message", messageRoute)
  *************************/
 app.use(async (req, res, next) => {
   next({status: 404, message: 'Sorry, we appear to have lost that page.'})
-})
+});
 
 /* ***********************
-* Express Error Handler
-* Place after all other middleware
-*************************/
+ * Express Error Handler
+ * Place after all other middleware
+ *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav()
+  let nav = await utilities.getNav();
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
   res.render("errors/error", {
     title: err.status || 'Server Error',

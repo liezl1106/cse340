@@ -177,7 +177,7 @@ Util.formatVehicleInfo = function (vehicle) {
  ************************************** */
 Util.buildClassificationList = async function (selectedClassificationId = null) {
   const classifications = await invModel.getClassifications();
-  let classificationSelect = '<select name="classification_id" id="classificationList" required>'
+  let classificationSelect = '<select name="classification_id" id="classificationList" required>';
   classificationSelect += "<option value=''>Choose a Classification</option>"; // Placeholder
 
   classifications.rows.forEach((classification) => {
@@ -185,11 +185,11 @@ Util.buildClassificationList = async function (selectedClassificationId = null) 
       <option value="${classification.classification_id}" 
         ${selectedClassificationId && classification.classification_id == selectedClassificationId ? 'selected' : ''}>
         ${classification.classification_name}
-      </option>`
+      </option>`;
   });
 
-  classificationSelect += "</select>"
-  return classificationSelect
+  classificationSelect += "</select>";
+  return classificationSelect;
 }
 
 /* ****************************************

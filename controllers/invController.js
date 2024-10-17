@@ -219,4 +219,49 @@ invCont.getInventoryJSON = async (req, res, next) => {
     }
   }
 
+  invCont.buildEditInventory = async function (req, res, next) {
+    const inventoryId = req.params.inventoryId; // Ensure this matches the route
+    let nav = await utilities.getNav();
+    
+    try {
+        const itemData = await invModel.getInventoryByInventoryId(inventoryId); // Fetch item
+        if (!itemData || itemData.length === 0) { // Check if data is returned
+            console.error("Item not found for ID:", inventoryId);
+            return res.status(404).render("errors/error", {
+                title: "Item Not Found",
+                message: "The item you are trying to edit does not exist.",
+                nav,
+            });
+        }
+
+        const classificationSelect = await utilities.buildClassificationList(itemData[0].classification_id); // Corrected to access the first item
+        const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`;
+        
+        res.render("inventory/editInventory", {
+            title: "Edit " + itemName,
+            nav,
+            classificationSelect,
+            errors: null,
+            inv_id: itemData[0].inv_id,
+            inv_make: itemData[0].inv_make,
+            inv_model: itemData[0].inv_model,
+            inv_year: itemData[0].inv_year,
+            inv_description: itemData[0].inv_description,
+            inv_image: itemData[0].inv_image,
+            inv_thumbnail: itemData[0].inv_thumbnail,
+            inv_price: itemData[0].inv_price,
+            inv_miles: itemData[0].inv_miles,
+            inv_color: itemData[0].inv_color,
+            classification_id: itemData[0].classification_id
+        });
+    } catch (error) {
+        console.error("Error fetching inventory data:", error);
+        res.status(500).render("errors/error", {
+            title: "Internal Server Error",
+            message: "An error occurred while trying to fetch the inventory item.",
+            nav,
+        });
+    }
+};
+
 module.exports = invCont

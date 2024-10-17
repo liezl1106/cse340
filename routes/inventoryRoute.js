@@ -29,6 +29,10 @@ router.post("/add-inventory",
   utilities.handleErrors(invController.addInventory)
 )
 
+// Build edit/update inventory views
+router.get("/edit/:inventoryId", utilities.handleErrors(invController.buildEditInventory))
+router.post("/update/", invValidate.inventoryRules(), invValidate.checkUpdateData, utilities.handleErrors(invController.updateInventory))
+
 // AJAX inventory api call route
 router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 

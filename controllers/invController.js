@@ -288,7 +288,7 @@ invCont.updateInventory = async function (req, res, next) {
     if (response) {
       const itemName = response.inv_make + " " + response.inv_model;
       req.flash("notice", `The ${itemName} was successfully updated.`);
-      res.redirect("/inv/");
+      res.redirect("/inv/management");
     } else {
       const classifications = await utilities.buildClassificationList(
         classification_id
@@ -357,7 +357,7 @@ invCont.deleteInventory = async function (req, res, next) {
 
   if (queryResponse) {
     req.flash("notice", `The ${itemName} was successfully deleted.`);
-    res.redirect("/inv/");
+    res.redirect("/inv/management");
   } else {
 
     req.flash("notice", "Sorry, the update failed.");
@@ -373,4 +373,5 @@ invCont.deleteInventory = async function (req, res, next) {
     });
   }
 };
+
 module.exports = invCont

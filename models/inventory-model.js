@@ -145,7 +145,7 @@ async function updateInventory(
 
 /*******************************
  * Delete Inventory Data
-
+ *******************************/
 async function deleteInventory(inv_id) {
   const sql = "DELETE FROM inventory WHERE inv_id = $1";
   try {
@@ -154,7 +154,7 @@ async function deleteInventory(inv_id) {
     console.error("deleteInventory error. " + error);
   }
 }
- *******************************/
+
 
 module.exports = {
   getClassifications,
@@ -162,5 +162,6 @@ module.exports = {
   getInventoryByInventoryId,
   addClassification,
   addInventory,
-  updateInventory
+  updateInventory,
+  deleteInventory
 };

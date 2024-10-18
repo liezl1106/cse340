@@ -33,6 +33,10 @@ router.post("/add-inventory",
 router.get("/edit/:inventoryId", utilities.handleErrors(invController.buildEditInventory))
 router.post("/update/", invValidate.inventoryRules(), invValidate.checkUpdateData, utilities.handleErrors(invController.updateInventory))
 
+// Delete vehicle information routes
+router.get("/delete/:inventoryId", utilities.handleErrors(invController.buildDeleteInventory));
+router.post("/delete/", utilities.handleErrors(invController.deleteInventory)); 
+
 // AJAX inventory api call route
 router.get("/getInventory/:classification_id", utilities.handleErrors(invController.getInventoryJSON))
 

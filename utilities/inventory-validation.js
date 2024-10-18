@@ -56,18 +56,45 @@ validate.inventoryRules = () => {
  * Check inventory data
  * ***************************** */
 validate.checkInventoryData = async (req, res, next) => {
-  const errors = validationResult(req);
+  let errors = [];
+  errors = validationResult(req);
+
   if (!errors.isEmpty()) {
-    const nav = await utilities.getNav();
-    return res.render("inventory/addInventory", {
-      errors: errors.array(),
-      title: "Add Vehicle",
+    const {
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id,
+    } = req.body;
+    let classifications = await utilities.buildClassificationList(
+      classification_id
+    );
+    let nav = await utilities.getNav();
+    res.render("inventory/addInventory", { // Try again
+      errors,
+      title: "Add Inventory",
       nav,
-      classifications: await utilities.buildClassificationList(),
-    })
+      classifications,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+    });
+    return;
   }
-  next()
-}
+  next();
+};
 
 /* ******************************
  * Check data and return errors or continue to update. Errors will redirect to edit view

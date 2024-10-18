@@ -50,34 +50,34 @@ invCont.buildByInventoryId = async function (req, res, next) {
  *  Get vehicle detail by ID
  * ************************** */
 invCont.getVehicleDetail = async (req, res) => {
-    const { id: vehicleId } = req.params
-  
-    try {
-      const vehicleData = await invModel.getInventoryByInventoryId(vehicleId)
-      const nav = await utilities.getNav()
-  
+  const { id: vehicleId } = req.params;
+
+  try {
+      const vehicleData = await invModel.getInventoryByInventoryId(vehicleId);
+      const nav = await utilities.getNav();
+
       if (!vehicleData) {
-        return res.status(404).render("errors/error", {
-          title: "Vehicle Not Found",
-          message: "The vehicle you are looking for does not exist.",
-          nav,
-        })
+          return res.status(404).render("errors/error", {
+              title: "Vehicle Not Found",
+              message: "The vehicle you are looking for does not exist.",
+              nav,
+          });
       }
-  
+
       res.render("inventory/vehicleDetail", {
-        title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
-        vehicle: vehicleData,
-        nav,
-      })
-    } catch (error) {
-      console.error("Error fetching vehicle details:", error)
+          title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
+          vehicle: vehicleData,
+          nav,
+      });
+  } catch (error) {
+      console.error("Error fetching vehicle details:", error);
       res.status(500).render("errors/error", {
-        title: "Internal Server Error",
-        message: "An error occurred while fetching vehicle details.",
-        nav: await utilities.getNav(),
-      })
-    }
+          title: "Internal Server Error",
+          message: "An error occurred while fetching vehicle details.",
+          nav: await utilities.getNav(),
+      });
   }
+};
   
 /* ***************************
  *  Build the main vehicle management view

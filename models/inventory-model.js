@@ -52,7 +52,7 @@ async function getInventoryByInventoryId(inventoryId) {
            WHERE inv_id = $1`,
           [inventoryId]
       );
-      return data.rows; // Make sure you return rows
+      return data.rows[0] || null; // Return the first item or null if not found
   } catch (error) {
       console.error("getInventoryByInventoryId error:", error);
       throw error; // Make sure to throw the error for the controller to handle

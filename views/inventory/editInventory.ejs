@@ -47,22 +47,11 @@
         <span class="fine-print">Required.</span>
     </label>
     <label>Classification
-        <select name="classification_id">
-            <option value="">Select Classification</option>
-            <% if (Array.isArray(classificationSelect) && classificationSelect.length) { %>
-                <% classificationSelect.forEach(function(classification) { %>
-                    <option value="<%= classification.classification_id %>" 
-                        <%= classification.classification_id === locals.classification_id ? 'selected' : '' %>>
-                        <%= classification.classification_name %>
-                    </option>
-                <% }) %>
-            <% } else { %>
-                <option disabled>No classifications available</option>
-            <% } %>
-        </select>
-        <span class="fine-print">Required.</span>
+        <%- classifications %><span class="fine-print">Required.</span>
     </label>
-    <input type="submit" name="submit" value="Update Vehicle">
-    <input type="hidden" name="inv_id" value="<%= locals.inv_id %>">
+    <input type="submit" name="submit" value="Update Vehicle" disabled>
+    <input type="hidden" name="inv_id"
+    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
+    <% } %>> 
+    <script src="/js/inv-update.js"></script> 
 </form>
-<script src="../../js/inv-update.js"></script>

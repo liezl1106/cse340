@@ -1,4 +1,5 @@
 const cookieParser = require("cookie-parser")
+const bodyParser = require('body-parser')
 const session = require("express-session")
 const pool = require('./database/')
 const express = require("express")
@@ -39,6 +40,9 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.use(utilities.checkJWTToken)
+
+app.use(bodyParser.urlencoded({ extended: true })); // for form submissions
+app.use(bodyParser.json()); // for JSON requests
 
 /* ***********************
  * Express Messages Middleware

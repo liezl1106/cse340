@@ -255,10 +255,50 @@ invCont.buildEditInventory = async function (req, res) {
  *  Update Inventory Data
  *************************** */
 invCont.updateInventory = async function (req, res) {
-    const nav = await utilities.getNav();
-  
-    const {
-      inv_id,
+  const nav = await utilities.getNav();
+
+  const inventory_id = parseInt(req.params.inventoryId); // Get inventory ID from the route parameter
+  const {
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body;
+
+  const response = await invModel.updateInventory(
+    inventory_id, // Pass the ID to the model function
+    inv_make,
+    inv_model,
+    inv_year,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_miles,
+    inv_color,
+    classification_id
+  );
+
+  if (response) {
+    const itemName = response.inv_make + " " + response.inv_model;
+    req.flash("notice", `The ${itemName} was successfully updated.`);
+    res.redirect("/inv/management");
+  } else {
+    const classifications = await utilities.buildClassificationList(classification_id);
+    const itemName = `${inv_make} ${inv_model}`;
+    req.flash("notice", "Sorry, the update failed.");
+    res.status(501).render("inventory/editInventory", {
+      title: "Edit " + itemName,
+      nav,
+      errors: null,
+      classifications,
+      inv_id: inventory_id, // Make sure to use the correct ID here
       inv_make,
       inv_model,
       inv_year,
@@ -269,51 +309,9 @@ invCont.updateInventory = async function (req, res) {
       inv_miles,
       inv_color,
       classification_id,
-    } = req.body;
-  
-    const response = await invModel.updateInventory(
-      inv_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id
-    );
-  
-    if (response) {
-      const itemName = response.inv_make + " " + response.inv_model
-      req.flash("notice", `The ${itemName} was successfully updated.`)
-      res.redirect("/inv/management")
-    } else {
-      const classifications = await utilities.buildClassificationList(
-        classification_id
-      )
-      const itemName = `${inv_make} ${inv_model}`
-      req.flash("notice", "Sorry, the update failed.")
-      res.status(501).render("inventory/editInventory", {
-        title: "Edit " + itemName,
-        nav,
-        errors: null,
-        classifications,
-        inv_id,
-        inv_make,
-        inv_model,
-        inv_year,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
-        inv_price,
-        inv_miles,
-        inv_color,
-        classification_id,
-      })
-    }
-}
+    });
+  }
+};
 
 /* ***************************
  *  Build the Delete Inventory View

@@ -166,6 +166,7 @@ async function updateAccount(req, res) {
     account_firstname,
     account_lastname,
     account_email,
+    // account_password,
   } = req.body;
 
   const regResult = await accountModel.updateAccount(
@@ -182,6 +183,8 @@ async function updateAccount(req, res) {
     );
 
     //Update the cookie accountData
+    // TODO: Better way to do this?
+
     const accountData = await accountModel.getAccountById(account_id); // Get it from db so we can remake the cookie
     delete accountData.account_password;
     res.locals.accountData.account_firstname = accountData.account_firstname; // So it displays correctly

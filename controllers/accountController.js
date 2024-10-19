@@ -137,11 +137,133 @@ async function registerAccount(req, res) {
   }
 }
 
+/* ****************************************
+ *  Deliver account update view get
+ * *************************************** */
+async function buildUpdate(req, res, next) {
+  let nav = await utilities.getNav();
+
+  const accountDetails = await accountModel.getAccountById(req.params.accountId);
+  const {account_id, account_firstname, account_lastname, account_email} = accountDetails;
+  res.render("account/update", {
+    title: "Update",
+    nav,
+    errors: null,
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email
+  });
+}
+
+/* ****************************************
+ *  Process account update post
+ * *************************************** */
+async function updateAccount(req, res) {
+  let nav = await utilities.getNav();
+  const {
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email,
+    // account_password,
+  } = req.body;
+
+  const regResult = await accountModel.updateAccount(
+    account_id,
+    account_firstname,
+    account_lastname,
+    account_email,
+  );
+
+  if (regResult) {
+    req.flash(
+      "notice",
+      `Congratulations, you've updated ${account_firstname}.`
+    );
+
+    //Update the cookie accountData
+    // TODO: Better way to do this?
+
+    const accountData = await accountModel.getAccountById(account_id); // Get it from db so we can remake the cookie
+    delete accountData.account_password;
+    res.locals.accountData.account_firstname = accountData.account_firstname; // So it displays correctly
+    utilities.updateCookie(accountData, res); // Remake the cookie with new data
+
+    res.status(201).render("account/account-management", {
+      title: "Management",
+      errors: null,
+      nav,
+    });
+  } else {
+    req.flash("notice", "Sorry, the update failed.");
+    res.status(501).render("account/update", {
+      title: "Update",
+      errors: null,
+      account_id,
+      account_firstname,
+      account_lastname,
+      account_email,
+      nav,
+    });
+  }
+}
+
+/* ****************************************
+ *  Process account password update post
+ * *************************************** */
+async function updatePassword(req, res) {
+  let nav = await utilities.getNav();
+
+  const { account_id, account_password } = req.body;
+
+  // Hash the password before storing.
+  let hashedPassword;
+  try {
+    // regular password and cost (salt is generated automatically)
+    hashedPassword = await bcrypt.hashSync(account_password, 10);
+  } catch (error) {
+    req.flash(
+      "notice",
+      "Sorry, there was an error processing the password update."
+    );
+    res.status(500).render("account/update", {
+      title: "Update",
+      nav,
+      errors: null,
+    });
+  }
+
+  const regResult = await accountModel.updatePassword(account_id, hashedPassword);
+
+  if (regResult) {
+    req.flash(
+      "notice",
+      `Congratulations, you've updated the password.`
+    );
+    res.status(201).render("account/account-management", {
+      title: "Manage",
+      errors: null,
+      nav,
+    });
+  } else {
+    req.flash("notice", "Sorry, the password update failed.");
+    res.status(501).render("account/update", {
+      title: "Update",
+      errors: null,
+      nav,
+    });
+  }
+}
+
 module.exports = { 
   buildAccountManagementView, 
   buildLogin, 
   accountLogin, 
   accountLogout, 
   buildRegister, 
-  registerAccount 
+  registerAccount,
+  buildUpdate,
+  updateAccount,
+  updatePassword 
 }

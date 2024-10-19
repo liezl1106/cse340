@@ -37,4 +37,19 @@ router.post(
   utilities.handleErrors(accountController.registerAccount)
 )
 
+// Update account handlers
+router.get("/update/:accountId", utilities.handleErrors(accountController.buildUpdate));
+router.post(
+  "/update",
+  regValidate.updateRules(), // TODO: This needs to have a separate rule set, without existing email check..unless...oh complex
+  regValidate.checkUpdateData,
+  utilities.handleErrors(accountController.updateAccount)
+  );
+router.post(
+  "/update-password",
+  regValidate.updatePasswordRules(),
+  regValidate.checkUpdatePasswordData,
+  utilities.handleErrors(accountController.updatePassword)
+);
+
 module.exports = router

@@ -91,9 +91,9 @@ validate.updateRules = () => {
         console.dir(req.body);
         const emailExists = await accountModel.checkExistingEmail(
           account_email, req.body.old_email
-        );
+        )
         if (emailExists) {
-          throw new Error("Email exists. Please log in or use different email");
+          throw new Error("Email exists. Please log in or use different email")
         }
       }),
   ]
@@ -173,11 +173,11 @@ validate.checkRegData = async (req, res, next) => {
  * Check data and return errors or continue to update
  * ***************************** */
 validate.checkUpdateData = async (req, res, next) => {
-  const { account_id, account_firstname, account_lastname, account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
   if (!errors.isEmpty()) {
-      let nav = await utilities.getNav();
+      let nav = await utilities.getNav()
       res.render("account/update/", {
           errors,
           title: "Update",
@@ -196,11 +196,11 @@ validate.checkUpdateData = async (req, res, next) => {
  * Check data and return errors or continue to update password
  * ***************************** */
 validate.checkUpdatePasswordData = async (req, res, next) => {
-  const { account_id, account_firstname, account_lastname, account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+  const { account_id, account_firstname, account_lastname, account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
   if (!errors.isEmpty()) {
-      let nav = await utilities.getNav();
+      let nav = await utilities.getNav()
       res.render("account/update", {
           errors,
           title: "Update",
@@ -209,7 +209,7 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
           account_firstname,
           account_lastname,
           account_email,
-      });
+      })
       return
   }
   next()
@@ -219,11 +219,11 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
  * Check data and return errors or continue to registration
  * ***************************** */
 validate.checkLoginData = async (req, res, next) => {
-  const { account_email } = req.body;
-  let errors = [];
-  errors = validationResult(req);
+  const { account_email } = req.body
+  let errors = []
+  errors = validationResult(req)
   if (!errors.isEmpty()) {
-      let nav = await utilities.getNav();
+      let nav = await utilities.getNav()
       res.render("account/login", {
           errors,
           title: "Login",
@@ -233,6 +233,6 @@ validate.checkLoginData = async (req, res, next) => {
       return
   }
   next()
-};
+}
 
 module.exports = validate

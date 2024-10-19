@@ -54,7 +54,9 @@ async function getAccountById(account_id) {
   }
 }
 
-
+/* *****************************
+ * Update Account
+ * ***************************** */
 async function updateAccount(account_id, account_firstname, account_lastname, account_email) {
   try{
     const sql = "UPDATE account SET account_firstname = $1, account_lastname = $2, account_email = $3 WHERE account_id = $4"
@@ -65,6 +67,10 @@ async function updateAccount(account_id, account_firstname, account_lastname, ac
   }
 
 }
+
+/* *****************************
+ * Update Password
+ * ***************************** */
 async function updatePassword(account_id, hashed_password) {
   try{
     const sql = "UPDATE account SET account_password = $1 WHERE account_id = $2"
@@ -76,6 +82,9 @@ async function updatePassword(account_id, hashed_password) {
 
 }
 
+/* *****************************
+ * Get Account List
+ * ***************************** */
 async function getAccountList() {
   const sql = "SELECT account_id, account_firstname, account_lastname FROM public.account"
   try {
@@ -93,5 +102,6 @@ module.exports = {
   getAccountByEmail,
   getAccountById,
   updateAccount,
+  updatePassword,
   getAccountList
 }

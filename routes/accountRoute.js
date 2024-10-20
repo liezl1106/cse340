@@ -1,19 +1,18 @@
-const express = require("express")
-const router = new express.Router()
-const accountController = require("../controllers/accountController")
-const utilities = require("../utilities")
-const regValidate = require('../utilities/account-validation')
+const express = require("express");
+const router = new express.Router();
+const accountController = require("../controllers/accountController");
+const utilities = require("../utilities");
+const regValidate = require('../utilities/account-validation');
 
 // Middleware for parsing JSON and URL-encoded data
-router.use(express.json())
-router.use(express.urlencoded({ extended: true }))
+router.use(express.json());
+router.use(express.urlencoded({ extended: true }));
 
-router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
+// Account Management Route
+router.get("/account", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView));
 
-/* ***********************
- * Build Login View
- * ************************/
-router.get("/login", utilities.handleErrors(accountController.buildLogin))
+// Login Routes
+router.get("/login", utilities.handleErrors(accountController.buildLogin));
 router.post(
   "/login",
   regValidate.loginRules(),
@@ -21,30 +20,26 @@ router.post(
   utilities.handleErrors(accountController.accountLogin)
 );
 
-/* ***********************
- * Route to logout
- * ************************/
-router.get("/logout", utilities.handleErrors(accountController.accountLogout))
+// Logout Route
+router.get("/logout", utilities.handleErrors(accountController.accountLogout));
 
-/* ***********************
- * Registration Handlers
- * ************************/
-router.get("/register", utilities.handleErrors(accountController.buildRegister))
+// Registration Handlers
+router.get("/register", utilities.handleErrors(accountController.buildRegister));
 router.post(
   "/register",
   regValidate.registrationRules(),
   regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
-)
+);
 
-// Update account handlers
+// Update Account Handlers
 router.get("/update/:accountId", utilities.handleErrors(accountController.buildUpdate));
 router.post(
   "/update",
-  regValidate.updateRules(), 
+  regValidate.updateRules(),
   regValidate.checkUpdateData,
   utilities.handleErrors(accountController.updateAccount)
-  );
+);
 router.post(
   "/update-password",
   regValidate.updatePasswordRules(),
@@ -52,4 +47,4 @@ router.post(
   utilities.handleErrors(accountController.updatePassword)
 );
 
-module.exports = router
+module.exports = router;

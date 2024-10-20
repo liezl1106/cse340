@@ -10,21 +10,24 @@ require("dotenv").config()
  * ************************************ */
 async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
+
+  console.log("Account Data:", res.locals.accountData); // Log account data
+  console.log("Unread Messages Count:", unread); // Log unread message count
 
   res.render("account/account-management", {
     title: "Account Management",
     nav,
     errors: null,
     unread, 
-  })
+  });
 }
 
 /* ****************************************
  *  Deliver login view
  * *************************************** */
 async function buildLogin(req, res, next) {
-  let nav = await utilities.getNav()
+  let nav = await utilities.getNav();
   res.render("account/login", {
     title: "Login",
     errors: null,
@@ -36,33 +39,34 @@ async function buildLogin(req, res, next) {
  *  Process login request
  * ************************************ */
 async function accountLogin(req, res) {
-  let nav = await utilities.getNav()
   const { account_email, account_password } = req.body;
-  const accountData = await accountModel.getAccountByEmail(account_email)
-  if (!accountData) {
-    req.flash("notice", "Please check your credentials and try again.")
-    return res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    })
-  }
+  console.log("Attempting login for:", account_email); // Log the email used for login
+  
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password;
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 })
-      res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 });
-      return res.redirect("/account/")
+    const accountData = await accountModel.getAccountByEmail(account_email);
+    
+    if (!accountData) {
+      console.log("Account not found for email:", account_email); // Log for debugging
+      req.flash("notice", "Please check your credentials and try again.");
+      return res.redirect("/account/login");
+    }
+    
+    const isPasswordValid = await bcrypt.compare(account_password, accountData.account_password);
+    
+    if (isPasswordValid) {
+      console.log("Login successful for:", account_email); // Log successful login
+      delete accountData.account_password; 
+      utilities.updateCookie(accountData, res);
+      return res.redirect("/account/login");
+    } else {
+      console.log("Incorrect password for email:", account_email); // Log incorrect password
+      req.flash("notice", "Incorrect password. Please try again.");
+      return res.redirect("/account/login");
     }
   } catch (error) {
-    console.error(error)
-    req.flash("notice", "Access forbidden.")
-    return res.status(403).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-    })
+    console.error("Login error:", error);
+    req.flash("notice", "An error occurred during login. Please try again.");
+    return res.redirect("/account/login");
   }
 }
 

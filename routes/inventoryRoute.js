@@ -11,7 +11,7 @@ router.get("/type/:classificationId", utilities.handleErrors(invController.build
 router.get("/detail/:id", utilities.handleErrors(invController.getVehicleDetail))
 
 // Route to view the inventory management page
-router.get("/management", utilities.handleErrors(invController.buildManagementView))
+router.get("/", utilities.handleErrors(invController.buildManagementView))
 
 // Classification management routes
 router.get("/add-classification", utilities.handleErrors(invController.buildAddClassification))

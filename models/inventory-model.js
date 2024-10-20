@@ -120,9 +120,22 @@ async function updateInventory(
   inv_color,
   classification_id
 ) {
-  const sql =
-    "UPDATE public.inventory SET inv_make = $1, inv_model = $2, inv_year = $3, inv_description = $4, inv_image = $5, inv_thumbnail = $6, inv_price = $7, inv_miles = $8, inv_color = $9, classification_id = $10 WHERE inv_id = $11 RETURNING *";
-  
+  const sql = `
+    UPDATE public.inventory
+    SET 
+      inv_make = $1, 
+      inv_model = $2, 
+      inv_year = $3, 
+      inv_description = $4, 
+      inv_image = $5, 
+      inv_thumbnail = $6, 
+      inv_price = $7, 
+      inv_miles = $8, 
+      inv_color = $9, 
+      classification_id = $10
+    WHERE inv_id = $11 
+    RETURNING *`;
+
   try {
     const result = await pool.query(sql, [
       inv_make,
@@ -138,15 +151,14 @@ async function updateInventory(
       inv_id,
     ]);
 
-    // Check if a row was returned
     if (result.rows.length === 0) {
       throw new Error(`No vehicle found with ID ${inv_id}`);
     }
 
-    return result.rows[0];
+    return result.rows[0]; // Return the updated inventory item
   } catch (error) {
     console.error("updateInventory error:", error);
-    throw error; // Rethrow the error to be handled by the calling function
+    throw error; // Rethrow for handling in the controller
   }
 }
 

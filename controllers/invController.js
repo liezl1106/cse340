@@ -309,7 +309,7 @@ invCont.updateInventory = async function (req, res, next) {
     if (response) {
       const itemName = response.inv_make + " " + response.inv_model;
       req.flash("notice", `The ${itemName} was successfully updated.`);
-      res.redirect("/inv/");
+      res.redirect("/inv/management");
     } else {
       const classifications = await utilities.buildClassificationList(
         classification_id
@@ -382,7 +382,7 @@ invCont.deleteInventory = async function (req, res) {
   } else {
 
     req.flash("notice", "Sorry, the update failed.")
-    res.status(501).render("inventory/deleteInventory", {
+    res.status(501).render("inventory/delete-confirm", {
       title: "Delete " + itemName,
       nav,
       errors: null,

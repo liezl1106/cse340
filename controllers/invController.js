@@ -312,7 +312,7 @@ invCont.updateInventory = async function (req, res) {
 
     const itemName = `${updatedItem.inv_make} ${updatedItem.inv_model}`;
     req.flash("notice", `The ${itemName} was successfully updated.`);
-    res.redirect("/inv/management");
+    res.redirect("/inv/");
   } catch (error) {
     console.error("Update Inventory Error:", error);
     req.flash("notice", "Sorry, the update failed. Please try again.");

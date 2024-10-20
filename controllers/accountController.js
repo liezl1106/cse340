@@ -12,9 +12,6 @@ async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
   const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
 
-  console.log("Account Data:", res.locals.accountData); // Log account data
-  console.log("Unread Messages Count:", unread); // Log unread message count
-
   res.render("account/account-management", {
     title: "Account Management",
     nav,

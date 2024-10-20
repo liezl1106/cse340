@@ -30,7 +30,7 @@ router.post("/add-inventory",
 )
 
 // Build edit/update inventory views
-router.get("/edit/:inventoryId", utilities.handleErrors(invController.buildEditInventory))
+router.get("/edit/:inventoryId", utilities.handleErrors(invController.buildEditInventory)) 
 router.post("/update/", invValidate.inventoryRules(), invValidate.checkUpdateData, utilities.handleErrors(invController.updateInventory))
 
 // Delete vehicle information routes

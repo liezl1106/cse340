@@ -9,49 +9,48 @@
     </ul>
 <% } %>
 
-<form class="input-box" id="updateForm" action="/inv/update" method="post">
+<<form class="input-box" id="updateForm" action="/inv/update" method="post">
     <label>Make
-        <input type="text" value="<%- locals.inv_make %>" placeholder="Ford" name="inv_make" minlength="2" maxlength="50">
+        <input type="text" value="<%- locals.inv_make %>" placeholder="Ford" name="inv_make" minlength="2" maxlength="50" required>
         <span class="fine-print">Required.</span>
     </label>
     <label>Model
-        <input type="text" value="<%- locals.inv_model %>" placeholder="Mustang" name="inv_model" minlength="2" maxlength="50">
+        <input type="text" value="<%- locals.inv_model %>" placeholder="Mustang" name="inv_model" minlength="2" maxlength="50" required>
         <span class="fine-print">Required.</span>
     </label>
     <label>Year
-        <input type="number" value="<%- locals.inv_year %>" placeholder="2001" name="inv_year" min="1900" max="2030">
+        <input type="number" value="<%- locals.inv_year %>" placeholder="2001" name="inv_year" min="1900" max="2030" required>
         <span class="fine-print">Required. 1900-2030.</span>
     </label>
     <label>Description
-        <textarea placeholder="Fancy and red." name="inv_description" minlength="2" maxlength="100" rows="5"><%- locals.inv_description %></textarea>
+        <textarea placeholder="Fancy and red." name="inv_description" minlength="2" maxlength="100" rows="5" required><%- locals.inv_description %></textarea>
         <span class="fine-print">Required. 100 characters max.</span>
     </label>
     <label>Image
-        <input type="text" value="/images/vehicles/no-image.png" placeholder="red_mustang.jpg" name="inv_image">
+        <input type="text" value="/images/vehicles/no-image.png" placeholder="red_mustang.jpg" name="inv_image" required>
         <span class="fine-print">Required.</span>
     </label>
     <label>Thumbnail
-        <input type="text" value="/images/vehicles/no-image-tn.png" placeholder="little_red_mustang.jpg" name="inv_thumbnail">
+        <input type="text" value="/images/vehicles/no-image-tn.png" placeholder="little_red_mustang.jpg" name="inv_thumbnail" required>
         <span class="fine-print">Required.</span>
     </label>
     <label>Price
-        <input type="number" value="<%- locals.inv_price %>" placeholder="15000" name="inv_price">
+        <input type="number" value="<%- locals.inv_price %>" placeholder="15000" name="inv_price" required>
         <span class="fine-print">Required. Numeric only, no comma.</span>
     </label>
     <label>Miles
-        <input type="number" value="<%- locals.inv_miles %>" placeholder="100000" name="inv_miles">
+        <input type="number" value="<%- locals.inv_miles %>" placeholder="100000" name="inv_miles" required>
         <span class="fine-print">Required. Numeric only, no comma.</span>
     </label>
     <label>Color
-        <input type="text" value="<%- locals.inv_color %>" placeholder="Red" name="inv_color">
+        <input type="text" value="<%- locals.inv_color %>" placeholder="Red" name="inv_color" required>
         <span class="fine-print">Required.</span>
     </label>
     <label>Classification
         <%- classifications %><span class="fine-print">Required.</span>
     </label>
-    <input type="submit" name="submit" value="Update Vehicle" disabled>
-    <input type="hidden" name="inv_id"
-    <% if(locals.inv_id) { %> value="<%= locals.inv_id %>"
-    <% } %>> 
+    <input type="submit" name="submit" value="Update Vehicle">
+    <input type="hidden" name="inv_id" 
+        <% if (locals.inv_id) { %> value="<%= locals.inv_id %>" <% } %> />
     <script src="/js/inv-update.js"></script> 
 </form>

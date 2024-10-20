@@ -312,7 +312,7 @@ invCont.updateInventory = async function (req, res) {
 
     const itemName = `${updatedItem.inv_make} ${updatedItem.inv_model}`;
     req.flash("notice", `The ${itemName} was successfully updated.`);
-    res.redirect("/inventory/management");
+    res.redirect("/inv/management");
   } catch (error) {
     console.error("Update Inventory Error:", error);
     req.flash("notice", "Sorry, the update failed. Please try again.");
@@ -342,24 +342,41 @@ invCont.updateInventory = async function (req, res) {
  *  Build the Delete Inventory View
  *************************** */
 invCont.buildDeleteInventory = async function (req, res) {
-  const inventoryId = parseInt(req.params.inventoryId)
-  const nav = await utilities.getNav()
+  const inventoryId = parseInt(req.params.inventoryId);
+  const nav = await utilities.getNav();
 
-  const inventoryData = (
-    await invModel.getInventoryByInventoryId(inventoryId))[0]; // Change this function to return the first item
-  const name = `${inventoryData.inv_make} ${inventoryData.inv_model}`
+  try {
+    const inventoryData = await invModel.getInventoryByInventoryId(inventoryId);
 
-  res.render("inventory/delete-confirm", {
-    title: "Delete " + name,
-    errors: null,
-    nav,
-    inv_id: inventoryData.inv_id,
-    inv_make: inventoryData.inv_make,
-    inv_model: inventoryData.inv_model,
-    inv_year: inventoryData.inv_year,
-    inv_price: inventoryData.inv_price,
-  })
-}
+    if (!inventoryData) {
+      return res.status(404).render("errors/error", {
+        title: "Vehicle Not Found",
+        message: "No vehicle found with the provided ID.",
+        nav,
+      });
+    }
+
+    const name = `${inventoryData.inv_make} ${inventoryData.inv_model}`;
+
+    res.render("inventory/delete-confirm", {
+      title: "Delete " + name,
+      errors: null,
+      nav,
+      inv_id: inventoryData.inv_id,
+      inv_make: inventoryData.inv_make,
+      inv_model: inventoryData.inv_model,
+      inv_year: inventoryData.inv_year,
+      inv_price: inventoryData.inv_price,
+    });
+  } catch (error) {
+    console.error("Error fetching inventory data:", error);
+    res.status(500).render("errors/error", {
+      title: "Internal Server Error",
+      message: "An error occurred while fetching the vehicle data.",
+      nav,
+    });
+  }
+};
 
 /* ***************************
  *  Delete Inventory Data
@@ -380,7 +397,7 @@ invCont.deleteInventory = async function (req, res) {
 
   if (queryResponse) {
     req.flash("notice", `The ${itemName} was successfully deleted.`)
-    res.redirect("/inventory/management")
+    res.redirect("/inv/management")
   } else {
 
     req.flash("notice", "Sorry, the update failed.")

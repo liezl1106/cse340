@@ -1,1 +1,1 @@
-SELECT * FROM public.inventory WHERE inv_id = 1;
+SELECT * FROM public.inventory WHERE inv_id = 21;

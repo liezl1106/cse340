@@ -39,34 +39,31 @@ async function buildLogin(req, res, next) {
  *  Process login request
  * ************************************ */
 async function accountLogin(req, res) {
+  let nav = await utilities.getNav();
   const { account_email, account_password } = req.body;
-  console.log("Attempting login for:", account_email); // Log the email used for login
-  
+  const accountData = await accountModel.getAccountByEmail(account_email);
+  if (!accountData) {
+    req.flash("notice", "Please check your credentials and try again.");
+    res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    });
+    return;
+  }
   try {
-    const accountData = await accountModel.getAccountByEmail(account_email);
-    
-    if (!accountData) {
-      console.log("Account not found for email:", account_email); // Log for debugging
-      req.flash("notice", "Please check your credentials and try again.");
-      return res.redirect("/account/login");
-    }
-    
-    const isPasswordValid = await bcrypt.compare(account_password, accountData.account_password);
-    
-    if (isPasswordValid) {
-      console.log("Login successful for:", account_email); // Log successful login
-      delete accountData.account_password; 
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
+      delete accountData.account_password;
       utilities.updateCookie(accountData, res);
-      return res.redirect("/account/login");
-    } else {
-      console.log("Incorrect password for email:", account_email); // Log incorrect password
-      req.flash("notice", "Incorrect password. Please try again.");
-      return res.redirect("/account/login");
+      return res.redirect("/account/");
+    } 
+    else {
+      req.flash("notice", "Please check your credentials and try again."); // Login was hanging with bad password but correct id
+      res.redirect("/account/");
     }
   } catch (error) {
-    console.error("Login error:", error);
-    req.flash("notice", "An error occurred during login. Please try again.");
-    return res.redirect("/account/login");
+    return new Error("Access Forbidden");
   }
 }
 

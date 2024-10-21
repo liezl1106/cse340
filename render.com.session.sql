@@ -1,1 +1,3 @@
-SELECT * FROM public.inventory WHERE inv_id = 21;
+UPDATE public.account
+SET account_firstname = 'Manager'
+WHERE account_firstname = 'Manag' AND account_lastname = 'User';

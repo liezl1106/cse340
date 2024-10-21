@@ -10,16 +10,15 @@ require("dotenv").config()
  * ************************************ */
 async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(req.session.accountData.account_id); // Use session data
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
 
   res.render("account/account-management", {
     title: "Account Management",
     nav,
     errors: null,
     unread, 
-    accountData: req.session.accountData, // Make sure to pass account data if needed
-    loggedin: true
   });
+  return; 
 }
 
 /* ****************************************
@@ -37,35 +36,42 @@ async function buildLogin(req, res, next) {
 /* ****************************************
  *  Process login request
  * ************************************ */
-async function accountLogin(req, res, next) {
-  const { account_email, account_password } = req.body;
-  const accountData = await accountModel.getAccountByEmail(account_email);
-
+async function accountLogin(req, res) {
+  let nav = await utilities.getNav()
+  const { account_email, account_password } = req.body
+  const accountData = await accountModel.getAccountByEmail(account_email)
   if (!accountData) {
-    req.flash("notice", "Please check your credentials and try again.");
-    return res.status(400).render("account/login", {
+    req.flash("notice", "Please check your credentials and try again.")
+    res.status(400).render("account/login", {
       title: "Login",
+      nav,
       errors: null,
       account_email,
-    });
+    })
+    return
   }
-
   try {
-    const isMatch = await bcrypt.compare(account_password, accountData.account_password);
-    
-    if (isMatch) {
-      delete accountData.account_password; // Remove password
-      utilities.updateCookie(accountData, res); // Set session or cookie
-
-      // Redirect to account management view
-      return res.redirect("/account/account-management"); // Redirect instead of render
-    } else {
-      req.flash("notice", "Invalid credentials. Please try again.");
-      return res.redirect("/account/login");
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
+      delete accountData.account_password
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
+      if(process.env.NODE_ENV === 'development') {
+        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+      } else {
+        res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
+      }
+      return res.redirect("/account/")
+    }
+    else {
+      req.flash("message notice", "Please check your credentials and try again.")
+      res.status(400).render("account/login", {
+        title: "Login",
+        nav,
+        errors: null,
+        account_email,
+      })
     }
   } catch (error) {
-    console.error("Login error:", error);
-    return next(error);
+    throw new Error('Access Forbidden')
   }
 }
 
@@ -186,9 +192,7 @@ async function updateAccount(req, res) {
     );
 
     //Update the cookie accountData
-    // TODO: Better way to do this?
-
-    const accountData = await accountModel.getAccountById(account_id); // Get it from db so we can remake the cookie
+    const accountData = await accountModel.getAccountById(account_id); 
     delete accountData.account_password;
     res.locals.accountData.account_firstname = accountData.account_firstname; // So it displays correctly
     utilities.updateCookie(accountData, res); // Remake the cookie with new data

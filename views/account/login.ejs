@@ -1,32 +1,31 @@
-<div class="form-container">
-    <form class="login-form" action="/account/login" method="post"> 
-        <h2>Login</h2>
-        <div class="form-group">
-            <label for="email">Email Address</label>
-            <input type="email" id="email" name="account_email" required value="<%= locals.account_email %>">
-        </div>
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="account_password" required autocomplete="current-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$">
-            <span class="reveal-button active" id="passwordHide"></span>
-        </div>
-        <button type="submit" class="submit-btn">Submit</button>
-    </form>
-    <p>No account? <a href="/account/register">Sign-up</a></p>
+<h1><%- title %></h1>
+<%- messages() %>
+<% if (errors) { %>
+    <ul class="notice">
+   <% errors.array().forEach(error => { %>
+     <li><%= error.msg %></li>
+  <%  }) %>
+   </ul>
+  <% } %>
+<form class="input-box" id="loginForm" action="/account/login" method="post">
+    <label>Email<input type="email" name="account_email" required autocomplete="email" value="<%= locals.account_email %>"></label>
+    <label>Password<input type="password" name="account_password" id="password" required autocomplete="current-password" pattern="^(?=.*[A-Z])(?=.*\d)(?=.*[^\w\s]).{12,}$"><span class="reveal-button active" id="passwordHide">hide password</span></label>
+    <input type="submit" value="LOGIN">
+</form>
+<div>
+    <span>No account? <a href="/account/register">Sign up</a></span>
 </div>
-
-<!-- Script to handle hiding and revealing password field -->
 <script>
     const passwordInput = document.querySelector("#password");
     const passwordHide = document.querySelector("#passwordHide");
-
     passwordHide.addEventListener("click", () => {
-        if(passwordInput.getAttribute("type") === "password") {
+        if(passwordInput.getAttribute("type") == "password" ) {
             passwordInput.setAttribute("type", "text");
             passwordHide.classList.remove("active");
-        } else {
+        }
+        else {
             passwordInput.setAttribute("type", "password");
             passwordHide.classList.add("active");
         }
-    });
+    })
 </script>

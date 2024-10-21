@@ -222,67 +222,79 @@ invCont.getInventoryJSON = async (req, res) => {
 /* ***************************
  *  Build the edit inventory view
  *************************** */
-invCont.buildEditInventory = async function (req, res) {
-  const inventoryId = parseInt(req.params.inventoryId);
-  
-  try {
-    const inventoryData = await invModel.getInventoryByInventoryId(inventoryId);
-    const classifications = await utilities.buildClassificationList(); // Fetch classifications
-    const nav = await utilities.getNav(); // Fetch navigation data
-
-    if (!inventoryData) {
-      return res.status(404).render("errors/error", {
-        title: "Vehicle Not Found",
-        message: "No vehicle found with the provided ID.",
-      });
-    }
-
-    res.render("inventory/editInventory", {
-      title: `Edit ${inventoryData.inv_make} ${inventoryData.inv_model}`,
-      inventoryData,
-      classifications, // Pass classifications to the view
-      nav, // Pass nav to the view
-      errors: null, // Pass null for errors initially
-    });
-  } catch (error) {
-    console.error("Error fetching inventory data:", error);
-    res.status(500).render("errors/error", {
-      title: "Internal Server Error",
-      message: "An error occurred while fetching the vehicle data.",
-    });
-  }
-};
+/* ***************************
+ *  Build edit inventory view
+ * ************************** */
+invCont.editInventoryView = async function (req, res, next) {
+  const inv_id = parseInt(req.params.inv_id)
+  let nav = await utilities.getNav()
+  const itemData = await invModel.getInventoryById(inv_id)
+  const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+  res.render("./inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect: classificationSelect,
+    errors: null,
+    inv_id: itemData.inv_id,
+    inv_make: itemData.inv_make,
+    inv_model: itemData.inv_model,
+    inv_year: itemData.inv_year,
+    inv_description: itemData.inv_description,
+    inv_image: itemData.inv_image,
+    inv_thumbnail: itemData.inv_thumbnail,
+    inv_price: itemData.inv_price,
+    inv_miles: itemData.inv_miles,
+    inv_color: itemData.inv_color,
+    classification_id: itemData.classification_id
+  })
+}
 
 /* ***************************
  *  Update Inventory Data
  *************************** */
-invCont.updateInventory = async function (req, res) {
-  const nav = await utilities.getNav();
-  const errors = validationResult(req); // Check for validation errors
-
-  // Debugging: Log validation errors
-  if (!errors.isEmpty()) {
-    console.log("Validation Errors:", errors.array());
-    const classifications = await utilities.buildClassificationList(req.body.classification_id);
-    return res.render("inventory/editInventory", {
-      title: `Edit Vehicle`,
-      nav,
-      errors: errors.array(), // Pass the validation errors
-      inv_id: req.body.inv_id,
-      inv_make: req.body.inv_make,
-      inv_model: req.body.inv_model,
-      inv_year: req.body.inv_year,
-      inv_description: req.body.inv_description,
-      inv_image: req.body.inv_image,
-      inv_thumbnail: req.body.inv_thumbnail,
-      inv_price: req.body.inv_price,
-      inv_miles: req.body.inv_miles,
-      inv_color: req.body.inv_color,
-      classifications,
-    });
-  }
-
+invCont.updateInventory = async function (req, res, next) {
+  let nav = await utilities.getNav()
   const {
+    inv_id,
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id,
+  } = req.body
+  const updateResult = await invModel.updateInventory(
+    inv_id,  
+    inv_make,
+    inv_model,
+    inv_description,
+    inv_image,
+    inv_thumbnail,
+    inv_price,
+    inv_year,
+    inv_miles,
+    inv_color,
+    classification_id
+  )
+
+  if (updateResult) {
+    const itemName = updateResult.inv_make + " " + updateResult.inv_model
+    req.flash("notice", `The ${itemName} was successfully updated.`)
+    res.redirect("/inv/")
+  } else {
+    const classificationSelect = await utilities.buildClassificationList(classification_id)
+    const itemName = `${inv_make} ${inv_model}`
+    req.flash("notice", "Sorry, the insert failed.")
+    res.status(501).render("inventory/edit-inventory", {
+    title: "Edit " + itemName,
+    nav,
+    classificationSelect: classificationSelect,
+    errors: null,
     inv_id,
     inv_make,
     inv_model,
@@ -293,58 +305,10 @@ invCont.updateInventory = async function (req, res) {
     inv_price,
     inv_miles,
     inv_color,
-    classification_id,
-  } = req.body;
-
-  try {
-    const updatedItem = await invModel.updateInventory(
-      inv_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id
-    );
-
-    // Debugging: Log updated item
-    console.log("Updated Item:", updatedItem);
-
-    // Check if the update was successful
-    if (updatedItem) {
-      const itemName = `${updatedItem.inv_make} ${updatedItem.inv_model}`;
-      req.flash("notice", `The ${itemName} was successfully updated.`);
-      return res.redirect("/inv/");
-    }
-
-  } catch (error) {
-    console.error("Update Inventory Error:", error);
-    req.flash("notice", "Sorry, the update failed. Please try again.");
-    const classifications = await utilities.buildClassificationList(classification_id);
-
-    return res.status(501).render("inventory/editInventory", {
-      title: `Edit ${inv_make} ${inv_model}`,
-      nav,
-      errors: null,
-      classifications,
-      inv_id,
-      inv_make,
-      inv_model,
-      inv_year,
-      inv_description,
-      inv_image,
-      inv_thumbnail,
-      inv_price,
-      inv_miles,
-      inv_color,
-      classification_id,
-    });
+    classification_id
+    })
   }
-};
+}
 
 /* ***************************
  *  Build the Delete Inventory View

@@ -137,6 +137,7 @@ async function updateInventory(
     RETURNING *`;
 
   try {
+    console.log("Updating inventory with ID:", inv_id);
     const result = await pool.query(sql, [
       inv_make,
       inv_model,

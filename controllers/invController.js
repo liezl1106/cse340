@@ -260,8 +260,9 @@ invCont.updateInventory = async function (req, res) {
   const nav = await utilities.getNav();
   const errors = validationResult(req); // Check for validation errors
 
-  // If there are validation errors, render the edit form with errors
+  // Debugging: Log validation errors
   if (!errors.isEmpty()) {
+    console.log("Validation Errors:", errors.array());
     const classifications = await utilities.buildClassificationList(req.body.classification_id);
     return res.render("inventory/editInventory", {
       title: `Edit Vehicle`,
@@ -310,16 +311,23 @@ invCont.updateInventory = async function (req, res) {
       classification_id
     );
 
-    const itemName = `${updatedItem.inv_make} ${updatedItem.inv_model}`;
-    req.flash("notice", `The ${itemName} was successfully updated.`);
-    res.redirect("/inv/");
+    // Debugging: Log updated item
+    console.log("Updated Item:", updatedItem);
+
+    // Check if the update was successful
+    if (updatedItem) {
+      const itemName = `${updatedItem.inv_make} ${updatedItem.inv_model}`;
+      req.flash("notice", `The ${itemName} was successfully updated.`);
+      return res.redirect("/inv/");
+    }
+
   } catch (error) {
     console.error("Update Inventory Error:", error);
     req.flash("notice", "Sorry, the update failed. Please try again.");
     const classifications = await utilities.buildClassificationList(classification_id);
 
-    res.status(501).render("inventory/editInventory", {
-      title: "Edit " + `${inv_make} ${inv_model}`,
+    return res.status(501).render("inventory/editInventory", {
+      title: `Edit ${inv_make} ${inv_model}`,
       nav,
       errors: null,
       classifications,
@@ -397,7 +405,7 @@ invCont.deleteInventory = async function (req, res) {
 
   if (queryResponse) {
     req.flash("notice", `The ${itemName} was successfully deleted.`)
-    res.redirect("/inv/management")
+    res.redirect("/inv/")
   } else {
 
     req.flash("notice", "Sorry, the update failed.")

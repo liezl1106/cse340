@@ -10,13 +10,15 @@ require("dotenv").config()
  * ************************************ */
 async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
+  const unread = await messageModel.getMessageCountById(req.session.accountData.account_id); // Use session data
 
   res.render("account/account-management", {
     title: "Account Management",
     nav,
     errors: null,
     unread, 
+    accountData: req.session.accountData, // Make sure to pass account data if needed
+    loggedin: true
   });
 }
 
@@ -35,32 +37,35 @@ async function buildLogin(req, res, next) {
 /* ****************************************
  *  Process login request
  * ************************************ */
-async function accountLogin(req, res) {
-  let nav = await utilities.getNav();
+async function accountLogin(req, res, next) {
   const { account_email, account_password } = req.body;
   const accountData = await accountModel.getAccountByEmail(account_email);
+
   if (!accountData) {
     req.flash("notice", "Please check your credentials and try again.");
-    res.status(400).render("account/login", {
+    return res.status(400).render("account/login", {
       title: "Login",
-      nav,
       errors: null,
       account_email,
     });
-    return;
   }
+
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password;
-      utilities.updateCookie(accountData, res);
-      return res.redirect("/account/");
-    } 
-    else {
-      req.flash("notice", "Please check your credentials and try again."); // Login was hanging with bad password but correct id
-      res.redirect("/account/");
+    const isMatch = await bcrypt.compare(account_password, accountData.account_password);
+    
+    if (isMatch) {
+      delete accountData.account_password; // Remove password
+      utilities.updateCookie(accountData, res); // Set session or cookie
+
+      // Redirect to account management view
+      return res.redirect("/account/account-management"); // Redirect instead of render
+    } else {
+      req.flash("notice", "Invalid credentials. Please try again.");
+      return res.redirect("/account/login");
     }
   } catch (error) {
-    return new Error("Access Forbidden");
+    console.error("Login error:", error);
+    return next(error);
   }
 }
 

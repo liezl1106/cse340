@@ -249,6 +249,180 @@ input[type="submit"]:hover {
   background-color: #0056b3; /* Darker blue on hover */
 }
 
+/* Heading styles */
+h1 {
+  /*text-align: center; /* Center the heading */
+  /*color: #007BFF; /* Blue color for the heading */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Notice styles */
+.notice {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+  margin: 20px 0; /* Space around the notice */
+  background-color: #f8d7da; /* Light red background for errors */
+  color: #721c24; /* Dark red text for errors */
+  border: 1px solid #f5c6cb; /* Light red border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside notice */
+}
+
+/* Input box form styles */
+#loginForm {
+  width: 300px; /* Set a width for the form */
+  margin: 0 auto; /* Center the form */
+  padding: 20px; /* Add padding */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  background-color: #fff; /* White background */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Label styles */
+#loginForm label {
+  display: block; /* Make labels block elements */
+  margin-bottom: 10px; /* Space between labels */
+  font-weight: bold; /* Bold font for labels */
+}
+
+/* Input styles */
+#loginForm input[type="email"],
+#loginForm input[type="password"],
+#loginForm input[type="submit"] {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding inside inputs */
+  margin-top: 5px; /* Space above inputs */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Slightly rounded corners */
+}
+
+/* Input focus styles */
+#loginForm input[type="email"]:focus,
+#loginForm input[type="password"]:focus {
+  border-color: #007BFF; /* Change border color on focus */
+  outline: none; /* Remove outline */
+}
+
+/* Submit button styles */
+#loginForm input[type="submit"] {
+  background-color: #007BFF; /* Blue background for submit */
+  color: white; /* White text */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+/* Submit button hover styles */
+#loginForm input[type="submit"]:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Reveal button styles */
+.reveal-button {
+  cursor: pointer; /* Pointer cursor for the reveal button */
+  color: #007BFF; /* Blue color */
+  margin-top: 5px; /* Space above the button */
+  display: inline-block; /* Inline-block for spacing */
+}
+
+/* Reveal button active styles */
+.reveal-button.active {
+  font-weight: bold; /* Make it bold when active */
+}
+
+/* Signup link styles */
+div {
+  text-align: center; /* Center the signup link */
+  margin-top: 20px; /* Space above the link */
+}
+
+div a {
+  color: #007BFF; /* Blue color for links */
+  text-decoration: none; /* Remove underline */
+}
+
+div a:hover {
+  text-decoration: underline; /* Underline on hover */
+}
+
+/* Account Registration Form */
+/* Form container styles */
+.form-container {
+  width: 400px; /* Set a width for the container */
+  margin: 0 auto; /* Center the container */
+  padding: 20px; /* Add padding */
+  background-color: #fff; /* White background */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+/* Form title styles */
+.register-form h2 {
+  text-align: center; /* Center the heading */
+  color: #007BFF; /* Blue color for the heading */
+  margin-bottom: 20px; /* Space below the heading */
+}
+
+/* Group styles for each form field */
+.form-group {
+  margin-bottom: 15px; /* Space below each group */
+}
+
+/* Label styles */
+.form-group label {
+  display: block; /* Make labels block elements */
+  margin-bottom: 5px; /* Space between label and input */
+  font-weight: bold; /* Bold font for labels */
+}
+
+/* Input styles */
+.register-form input[type="text"],
+.register-form input[type="email"],
+.register-form input[type="password"] {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding inside inputs */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 4px; /* Slightly rounded corners */
+  box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Input focus styles */
+.register-form input:focus {
+  border-color: #007BFF; /* Change border color on focus */
+  outline: none; /* Remove outline */
+}
+
+/* Button styles */
+.register-btn {
+  width: 100%; /* Full width */
+  padding: 10px; /* Padding inside button */
+  background-color: #007BFF; /* Blue background */
+  color: white; /* White text */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Slightly rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+/* Button hover styles */
+.register-btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Reveal button styles */
+.reveal-button {
+  cursor: pointer; /* Pointer cursor for the reveal button */
+  color: #007BFF; /* Blue color */
+  display: inline-block; /* Inline-block for spacing */
+  margin-top: 5px; /* Space above the button */
+}
+
+/* Reveal button active styles */
+.reveal-button.active {
+  font-weight: bold; /* Make it bold when active */
+}
+
 /* Footer */
 footer {
   background-color: #ffcea2;

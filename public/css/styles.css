@@ -423,6 +423,82 @@ div a:hover {
   font-weight: bold; /* Make it bold when active */
 }
 
+/* Manage inventory title styles */
+h2 {
+  text-align: center; /* Center the secondary heading */
+  color: #141415; /* Black */
+  margin: 20px 0; /* Space above and below the heading */
+}
+
+/* Notice styles for error messages */
+.notice {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+  margin: 20px 0; /* Space around the notice */
+  background-color: #f8d7da; /* Light red background for errors */
+  color: #721c24; /* Dark red text for errors */
+  border: 1px solid #f5c6cb; /* Light red border */
+  border-radius: 4px; /* Rounded corners */
+  padding: 10px; /* Padding inside notice */
+}
+
+/* No bullet style for the list */
+.no-bullet {
+  list-style-type: none; /* Remove bullet points */
+  padding: 0; /* Remove padding */
+}
+
+/* List item styles */
+.no-bullet li {
+  margin-bottom: 10px; /* Space below each item */
+}
+
+/* Button styles */
+.btn {
+  display: inline-block; /* Inline-block for buttons */
+  padding: 10px 15px; /* Padding inside buttons */
+  background-color: #007BFF; /* Blue background */
+  color: white; /* White text */
+  text-decoration: none; /* Remove underline */
+  border-radius: 4px; /* Slightly rounded corners */
+  transition: background-color 0.3s; /* Smooth transition */
+}
+
+/* Button hover styles */
+.btn:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+}
+
+/* Input box styles */
+.input-box {
+  background-color: #fff; /* White background */
+  border: 1px solid #ccc; /* Light gray border */
+  border-radius: 5px; /* Rounded corners */
+  padding: 20px; /* Padding inside the box */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  margin-top: 20px; /* Space above the input box */
+}
+
+/* Table styles */
+#inventoryDisplay {
+  width: 400px; 
+  border-collapse: collapse; /* Collapse borders */
+  margin-top: 15px; /* Space above the table */
+}
+
+/* Table header styles */
+#inventoryDisplay th {
+  background-color: #007BFF; /* Blue background */
+  color: white; /* White text */
+  padding: 10px; /* Padding inside cells */
+}
+
+/* Table cell styles */
+#inventoryDisplay td {
+  border: 1px solid #ccc; /* Light gray border */
+  padding: 10px; /* Padding inside cells */
+}
+
 /* Footer */
 footer {
   background-color: #ffcea2;
@@ -524,5 +600,12 @@ footer {
 
   .card {
     flex: 1 1 calc(50% - 20px); 
+  }
+}
+
+/* Responsive table styles */
+@media (max-width: 600px) {
+  #inventoryDisplay {
+      font-size: 14px; /* Smaller text on mobile */
   }
 }

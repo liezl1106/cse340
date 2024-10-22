@@ -88,7 +88,7 @@ async function accountLogout(req, res) {
 /* ****************************************
  *  Deliver registration view
  * *************************************** */
-async function buildRegister(req, res, next) {
+async function buildRegister(req, res) {
   let nav = await utilities.getNav();
   res.render("account/register", {
     title: "Register",
@@ -196,7 +196,7 @@ async function updateAccount(req, res) {
     res.locals.accountData.account_firstname = accountData.account_firstname // So it displays correctly
     utilities.updateCookie(accountData, res) // Remake the cookie with new data
 
-    res.status(201).render("account/account-management", {
+    res.status(201).render("/account/", {
       title: "Management",
       errors: null,
       nav,

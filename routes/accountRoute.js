@@ -9,7 +9,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 // Account Management Route
-router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
+router.get("/", utilities.handleErrors(accountController.buildAccountManagementView))
 
 // Login Routes
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
@@ -29,7 +29,7 @@ router.get("/register", utilities.handleErrors(accountController.buildRegister))
 // Process the registration data
 router.post(
   "/register",
-  regValidate.registationRules(),
+  regValidate.registrationRules(),
   regValidate.checkRegData,
   utilities.handleErrors(accountController.registerAccount)
 )

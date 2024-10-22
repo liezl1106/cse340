@@ -6,7 +6,7 @@ const utilities = require(".")
 /* **********************************
  *  Registration Data Validation Rules
  * ********************************* */
-validate.registationRules = () => {
+validate.registrationRules = () => {
   return [
     // firstname is required and must be string
     body("account_firstname")
@@ -175,33 +175,6 @@ validate.checkUpdateData = async (req, res, next) => {
       return
   }
   next()
-}
-
-/* **********************************
- *  Login Data Validation Rules
- * ********************************* */
-validate.loginRules = () => {
-  return [
-    // valid email is required and cannot already exist in the database
-    body("account_email")
-      .trim()
-      .isEmail()
-      .normalizeEmail() // refer to validator.js docs
-      .withMessage("A valid email is required."),
-
-    // password is required and must be strong password
-    body("account_password")
-      .trim()
-      .notEmpty()
-      .isStrongPassword({
-        minLength: 12,
-        minLowercase: 1,
-        minUppercase: 1,
-        minNumbers: 1,
-        minSymbols: 1,
-      })
-      .withMessage("Password does not meet requirements."),
-  ]
 }
 
 /* ******************************

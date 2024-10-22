@@ -128,9 +128,6 @@ validate.updatePasswordRules = () => {
   ];
 };
 
-
-
-
 /* ******************************
  * Check data and return errors or continue to registration
  * ***************************** */
@@ -199,8 +196,6 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
   next();
 };
 
-
-
 /* ******************************
  * Check data and return errors or continue to registration
  * ***************************** */
@@ -220,5 +215,28 @@ validate.checkLoginData = async (req, res, next) => {
   }
   next();
 };
+
+/* ****************************************
+* Middleware to check token validity
+**************************************** */
+Util.checkJWTToken = (req, res, next) => {
+  if (req.cookies.jwt) {
+   jwt.verify(
+    req.cookies.jwt,
+    process.env.ACCESS_TOKEN_SECRET,
+    function (err, accountData) {
+     if (err) {
+      req.flash("Please log in")
+      res.clearCookie("jwt")
+      return res.redirect("/account/login")
+     }
+     res.locals.accountData = accountData
+     res.locals.loggedin = 1
+     next()
+    })
+  } else {
+   next()
+  }
+ }
 
 module.exports = validate;

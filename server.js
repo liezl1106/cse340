@@ -35,11 +35,11 @@ app.use(session({
 
 app.use(cookieParser())
 
+app.use(utilities.checkJWTToken)
+
 // ** Add body parsing middleware here **
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
-
-app.use(utilities.checkJWTToken)
 
 app.use(bodyParser.urlencoded({ extended: true })); // for form submissions
 app.use(bodyParser.json()); // for JSON requests

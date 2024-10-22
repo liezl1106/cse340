@@ -6,34 +6,6 @@ const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 /* ****************************************
- *  Build Account Management View
- * ************************************ */
-async function buildAccountManagementView(req, res) {
-  let nav = await utilities.getNav();
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
-
-  res.render("account/account-management", {
-    title: "Account Management",
-    nav,
-    errors: null,
-    unread, 
-  });
-  return; 
-}
-
-/* ****************************************
- *  Deliver login view
- * *************************************** */
-async function buildLogin(req, res, next) {
-  let nav = await utilities.getNav();
-  res.render("account/login", {
-    title: "Login",
-    errors: null,
-    nav,
-  });
-}
-
-/* ****************************************
  *  Process login request
  * ************************************ */
 async function accountLogin(req, res) {
@@ -73,6 +45,34 @@ async function accountLogin(req, res) {
   } catch (error) {
     throw new Error('Access Forbidden')
   }
+}
+
+/* ****************************************
+ *  Deliver login view
+ * *************************************** */
+async function buildLogin(req, res, next) {
+  let nav = await utilities.getNav();
+  res.render("account/login", {
+    title: "Login",
+    errors: null,
+    nav,
+  });
+}
+
+/* ****************************************
+ *  Build Account Management View
+ * ************************************ */
+async function buildAccountManagementView(req, res) {
+  let nav = await utilities.getNav();
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
+
+  res.render("account/account-management", {
+    title: "Account Management",
+    nav,
+    errors: null,
+    unread, 
+  });
+  return; 
 }
 
 /* ****************************************
@@ -264,9 +264,9 @@ async function updatePassword(req, res) {
 }
 
 module.exports = { 
+  accountLogin, 
   buildAccountManagementView, 
   buildLogin, 
-  accountLogin, 
   accountLogout, 
   buildRegister, 
   registerAccount,

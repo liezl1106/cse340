@@ -31,7 +31,7 @@ async function accountLogin(req, res) {
       } else {
         res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
       }
-      return res.redirect("/account/")
+      return res.redirect("/account/account-management")
     }
     else {
       req.flash("message notice", "Please check your credentials and try again.")
@@ -83,7 +83,7 @@ async function accountLogout(req, res) {
   delete res.locals.accountData
   res.locals.loggedin = 0
   req.flash("notice", "Logout successful.")
-  res.redirect("/")
+  res.redirect("/account")
 }
 
 /* ****************************************

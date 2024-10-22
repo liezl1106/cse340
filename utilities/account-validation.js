@@ -177,6 +177,33 @@ validate.checkUpdateData = async (req, res, next) => {
   next()
 }
 
+/* **********************************
+ *  Login Data Validation Rules
+ * ********************************* */
+validate.loginRules = () => {
+  return [
+    // valid email is required and cannot already exist in the database
+    body("account_email")
+      .trim()
+      .isEmail()
+      .normalizeEmail() // refer to validator.js docs
+      .withMessage("A valid email is required."),
+
+    // password is required and must be strong password
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet requirements."),
+  ]
+}
+
 /* ******************************
  * Check data and return errors or continue to update password
  * ***************************** */
@@ -200,6 +227,27 @@ validate.checkUpdatePasswordData = async (req, res, next) => {
   next()
 }
 
+/* **********************************
+ *  Update Password Data Validation Rules
+ * ********************************* */
+validate.updatePasswordRules = () => {
+  return [
+
+    // password is required and must be strong password
+    body("account_password")
+      .trim()
+      .notEmpty()
+      .isStrongPassword({
+        minLength: 12,
+        minLowercase: 1,
+        minUppercase: 1,
+        minNumbers: 1,
+        minSymbols: 1,
+      })
+      .withMessage("Password does not meet requirements."),
+  ]
+}
+
 /* ******************************
  * Check data and return errors or continue to registration
  * ***************************** */
@@ -215,6 +263,52 @@ validate.checkLoginData = async (req, res, next) => {
           nav,
           account_email,
       })
+      return
+  }
+  next()
+}
+
+/* ******************************
+ * Check data and return errors or continue to update password
+ * ***************************** */
+validate.checkUpdatePasswordData = async (req, res, next) => {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      let nav = await utilities.getNav();
+      res.render("account/update", {
+          errors,
+          title: "Update",
+          nav,
+          account_id,
+          account_firstname,
+          account_lastname,
+          account_email,
+      });
+      return
+  }
+  next()
+}
+
+/* ******************************
+ * Check data and return errors or continue to update
+ * ***************************** */
+validate.checkUpdateData = async (req, res, next) => {
+  const { account_id, account_firstname, account_lastname, account_email } = req.body;
+  let errors = [];
+  errors = validationResult(req);
+  if (!errors.isEmpty()) {
+      let nav = await utilities.getNav();
+      res.render("account/update/", {
+          errors,
+          title: "Update",
+          nav,
+          account_id,
+          account_firstname,
+          account_lastname,
+          account_email,
+      });
       return
   }
   next()

@@ -54,7 +54,7 @@ async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav();
   const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
 
-  res.render("account/account-management", {
+  res.render("/account/", {
     title: "Account Management",
     nav,
     errors: null,
@@ -71,7 +71,7 @@ async function accountLogout(req, res) {
   delete res.locals.accountData
   res.locals.loggedin = 0
   req.flash("notice", "Logout successful.")
-  res.redirect("/account")
+  res.redirect("/account/")
 }
 
 /* ****************************************

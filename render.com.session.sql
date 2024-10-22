@@ -1,3 +1,2 @@
-UPDATE public.account
-SET account_firstname = 'Manager'
-WHERE account_firstname = 'Manag' AND account_lastname = 'User';
+INSERT INTO public.account (account_firstname, account_lastname, account_email, account_password)
+VALUES ('Basic', 'Stark', 'tony@starkent.com', 'Iam1ronM@n');

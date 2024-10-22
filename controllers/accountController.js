@@ -31,7 +31,7 @@ async function accountLogin(req, res) {
       } else {
         res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
       }
-      return res.redirect("/account/")
+      return res.redirect("account/account-management")
     }
     else {
       req.flash("message notice", "Please check your credentials and try again.")
@@ -62,12 +62,15 @@ async function buildLogin(req, res, next) {
 /* ****************************************
  *  Build Account Management View
  * ************************************ */
-async function buildAccountManagementView(req, res, next) {
-  let nav = await utilities.getNav()
+async function buildAccountManagementView(req, res) {
+  let nav = await utilities.getNav();
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
+
   res.render("account/account-management", {
     title: "Account Management",
-    errors: null,
     nav,
+    errors: null,
+    unread, 
   })
 }
 

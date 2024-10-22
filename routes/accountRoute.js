@@ -9,7 +9,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 // Account Management Route
-router.get("/account", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
+router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildAccountManagementView))
 
 // Login Routes
 router.get("/login", utilities.handleErrors(accountController.buildLogin))

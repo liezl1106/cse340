@@ -149,62 +149,71 @@ async function registerAccount(req, res) {
 /* ****************************************
  *  Deliver account update view get
  * *************************************** */
-async function buildUpdate(req, res, next) {
-  let nav = await utilities.getNav()
+async function buildUpdate(req, res) {
+  let nav = await utilities.getNav();
+  const accountId = req.params.accountId;
 
-  const accountDetails = await accountModel.getAccountById(req.params.accountId)
-  const {account_id, account_firstname, account_lastname, account_email} = accountDetails
-  res.render("account/update", {
-    title: "Update",
-    nav,
-    errors: null,
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email
-  })
+  try {
+    const accountDetails = await accountModel.getAccountById(accountId);
+    if (!accountDetails) {
+      req.flash("notice", "Account not found.");
+      return res.redirect("/account/account-management");
+    }
+
+    res.render("account/update", {
+      title: "Update Account",
+      nav,
+      locals: {
+        account_id: accountDetails.account_id,
+        account_firstname: accountDetails.account_firstname,
+        account_lastname: accountDetails.account_lastname,
+        account_email: accountDetails.account_email,
+      },
+      errors: null // Ensure errors is defined
+    });
+  } catch (error) {
+    console.error("Error retrieving account details:", error);
+    req.flash("notice", "An error occurred while retrieving account details.");
+    res.redirect("/account/account-management");
+  }
 }
 
 /* ****************************************
  *  Process account update post
  * *************************************** */
 async function updateAccount(req, res) {
-  let nav = await utilities.getNav()
-  const {
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email,
-    // account_password,
-  } = req.body
+  let nav = await utilities.getNav();
+  const { account_id, account_firstname, account_lastname, account_email } = req.body;
 
-  const regResult = await accountModel.updateAccount(
-    account_id,
-    account_firstname,
-    account_lastname,
-    account_email,
-  )
+  try {
+    const regResult = await accountModel.updateAccount(account_id, account_firstname, account_lastname, account_email);
 
-  if (regResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you've updated ${account_firstname}.`
-    )
+    if (regResult) {
+      req.flash("notice", `Congratulations, you've updated ${account_firstname}.`);
 
-    //Update the cookie accountData
-    const accountData = await accountModel.getAccountById(account_id) 
-    delete accountData.account_password;
-    res.locals.accountData.account_firstname = accountData.account_firstname // So it displays correctly
-    utilities.updateCookie(accountData, res) // Remake the cookie with new data
+      // Update the cookie accountData
+      const accountData = await accountModel.getAccountById(account_id);
+      delete accountData.account_password;
+      res.locals.accountData = accountData;
+      utilities.updateCookie(accountData, res);
 
-    res.status(201).render("account/account-management", {
-      title: "Management",
-      errors: null,
-      nav,
-    })
-  } else {
-    req.flash("notice", "Sorry, the update failed.")
-    res.status(501).render("account/update", {
+      return res.redirect("/account/account-management");
+    } else {
+      req.flash("notice", "Sorry, the update failed.");
+      return res.render("account/update", {
+        title: "Update",
+        errors: null,
+        account_id,
+        account_firstname,
+        account_lastname,
+        account_email,
+        nav,
+      });
+    }
+  } catch (error) {
+    console.error("Error during account update:", error);
+    req.flash("notice", "An error occurred while updating the account.");
+    return res.render("account/update", {
       title: "Update",
       errors: null,
       account_id,
@@ -212,7 +221,7 @@ async function updateAccount(req, res) {
       account_lastname,
       account_email,
       nav,
-    })
+    });
   }
 }
 

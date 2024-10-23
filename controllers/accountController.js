@@ -35,7 +35,7 @@ async function accountLogin(req, res) {
         ...(process.env.NODE_ENV !== 'development' && { secure: true })
       };
       res.cookie("jwt", accessToken, cookieOptions)
-      return res.redirect("account/account-management")
+      return res.redirect("/account/account-management")
     } else {
       req.flash("notice", "Invalid credentials. Please try again.");
       return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })
@@ -63,16 +63,16 @@ async function buildLogin(req, res, next) {
  *  Process account management get request
  * ************************************ */
 async function buildAccountManagementView(req, res) {
-  let nav = await utilities.getNav()
-  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
+  let nav = await utilities.getNav();
+  const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id);
 
-  res.render("account/account-management", {
+  res.render("account/account-management", {  
     title: "Account Management",
     nav,
     errors: null,
-    unread, 
+    unread,
+    locals: res.locals // Make sure to pass locals if used in the view
   })
-  return 
 }
 
 /* ****************************************
@@ -83,14 +83,14 @@ async function accountLogout(req, res) {
   delete res.locals.accountData
   res.locals.loggedin = 0
   req.flash("notice", "Logout successful.")
-  res.redirect("account/login")
+  return res.redirect("/account/login") 
 }
 
 /* ****************************************
  *  Deliver registration view
  * *************************************** */
 async function buildRegister(req, res) {
-  let nav = await utilities.getNav();
+  let nav = await utilities.getNav()
   res.render("account/register", {
     title: "Register",
     nav,

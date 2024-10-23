@@ -201,18 +201,18 @@ main {
 
 /* Styles for the form */
 .form-container {
-  background-color: #ffffff; /* White background for the form */
-  border-radius: 10px; /* Rounded corners */
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-  padding: 40px; /* Inner padding */
-  width: 350px; /* Set a fixed width */
+  background-color: #ffffff; 
+  border-radius: 10px; 
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  padding: 40px; 
+  width: 350px; 
 }
 
 /* Form styles for addClassification.ejs */
 label {
-  display: block; /* Make labels block elements */
-  margin-bottom: 5px; /* Space below labels */
-  color: #110f0f; /* Medium gray color for labels */
+  display: block; 
+  margin-bottom: 5px; 
+  color: #110f0f; 
 }
 
 input[type="text"] {
@@ -235,18 +235,18 @@ input[type="text"] {
 
 /* Button styles */
 input[type="submit"] {
-  background-color: #4baef9; /* Blue background */
-  color: rgb(27, 26, 26); /* White text */
-  padding: 12px; /* Inner padding */
-  border: none; /* Remove default border */
-  border-radius: 5px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-size: 16px; /* Larger font size */
-  transition: background-color 0.3s; /* Smooth transition */
+  background-color: #054373; 
+  color: rgb(27, 26, 26); 
+  padding: 12px; 
+  border: none; 
+  border-radius: 5px; 
+  cursor: pointer; 
+  font-size: 16px; 
+  transition: background-color 0.3s; 
 }
 
 input[type="submit"]:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #2b2c2d; 
 }
 
 /* Heading styles */
@@ -300,29 +300,29 @@ h1 {
 /* Input focus styles */
 #loginForm input[type="email"]:focus,
 #loginForm input[type="password"]:focus {
-  border-color: #007BFF; /* Change border color on focus */
-  outline: none; /* Remove outline */
+  border-color: #242527; 
+  outline: none; 
 }
 
 /* Submit button styles */
 #loginForm input[type="submit"] {
-  background-color: #007BFF; /* Blue background for submit */
-  color: white; /* White text */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s; /* Smooth transition */
+  background-color: #05498c; 
+  color: white; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
 }
 
 /* Submit button hover styles */
 #loginForm input[type="submit"]:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #034572; 
 }
 
 /* Reveal button styles */
 .reveal-button {
-  cursor: pointer; /* Pointer cursor for the reveal button */
-  color: #007BFF; /* Blue color */
-  margin-top: 5px; /* Space above the button */
-  display: inline-block; /* Inline-block for spacing */
+  cursor: pointer; 
+  color: #121c27; 
+  margin-top: 5px; 
+  display: inline-block; 
 }
 
 /* Reveal button active styles */
@@ -337,7 +337,7 @@ div {
 }
 
 div a {
-  color: #007BFF; /* Blue color for links */
+  color: #181e25; 
   text-decoration: none; /* Remove underline */
 }
 
@@ -359,9 +359,9 @@ div a:hover {
 
 /* Form title styles */
 .register-form h2 {
-  text-align: center; /* Center the heading */
-  color: #007BFF; /* Blue color for the heading */
-  margin-bottom: 20px; /* Space below the heading */
+  text-align: center; 
+  color: #15191e; 
+  margin-bottom: 20px; 
 }
 
 /* Group styles for each form field */
@@ -389,33 +389,33 @@ div a:hover {
 
 /* Input focus styles */
 .register-form input:focus {
-  border-color: #007BFF; /* Change border color on focus */
+  border-color: #1c1e1f; /* Change border color on focus */
   outline: none; /* Remove outline */
 }
 
 /* Button styles */
 .register-btn {
-  width: 100%; /* Full width */
-  padding: 10px; /* Padding inside button */
-  background-color: #007BFF; /* Blue background */
-  color: white; /* White text */
-  border: none; /* Remove border */
-  border-radius: 4px; /* Slightly rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background-color 0.3s; /* Smooth transition */
+  width: 100%; 
+  padding: 10px; 
+  background-color: #09121c; 
+  color: white; 
+  border: none; 
+  border-radius: 4px; 
+  cursor: pointer; 
+  transition: background-color 0.3s; 
 }
 
 /* Button hover styles */
 .register-btn:hover {
-  background-color: #0056b3; /* Darker blue on hover */
+  background-color: #11151a; 
 }
 
 /* Reveal button styles */
 .reveal-button {
-  cursor: pointer; /* Pointer cursor for the reveal button */
-  color: #007BFF; /* Blue color */
-  display: inline-block; /* Inline-block for spacing */
-  margin-top: 5px; /* Space above the button */
+  cursor: pointer; 
+  color: #1d2125; 
+  display: inline-block; 
+  margin-top: 5px; 
 }
 
 /* Reveal button active styles */
@@ -457,7 +457,7 @@ h2 {
 .btn {
   display: inline-block; /* Inline-block for buttons */
   padding: 10px 15px; /* Padding inside buttons */
-  background-color: #007BFF; /* Blue background */
+  background-color: #0b0d0f; /* Blue background */
   color: white; /* White text */
   text-decoration: none; /* Remove underline */
   border-radius: 4px; /* Slightly rounded corners */
@@ -488,7 +488,7 @@ h2 {
 
 /* Table header styles */
 #inventoryDisplay th {
-  background-color: #007BFF; /* Blue background */
+  background-color: #0e0f10; /* Blue background */
   color: white; /* White text */
   padding: 10px; /* Padding inside cells */
 }

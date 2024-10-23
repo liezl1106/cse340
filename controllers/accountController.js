@@ -20,7 +20,7 @@ async function accountLogin(req, res) {
     
     if (!accountData) {
       req.flash("notice", "Invalid credentials. Please try again.");
-      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })
+      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email }) //Use res.render() when you want to display a view without changing the URL
     }
 
     const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
@@ -35,7 +35,7 @@ async function accountLogin(req, res) {
         ...(process.env.NODE_ENV !== 'development' && { secure: true })
       };
       res.cookie("jwt", accessToken, cookieOptions)
-      return res.redirect("/account/account-management")
+      return res.redirect("/account/account-management") //Use res.redirect() when you want to change the URL and send the user to a different route
     } else {
       req.flash("notice", "Invalid credentials. Please try again.");
       return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })

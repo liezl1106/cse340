@@ -50,34 +50,38 @@ invCont.buildByInventoryId = async function (req, res) {
  *  Get vehicle detail by ID
  * ************************** */
 invCont.getVehicleDetail = async (req, res) => {
-  const { id: vehicleId } = req.params;
+  const { id: vehicleId } = req.params
 
   try {
-      const vehicleData = await invModel.getInventoryByInventoryId(vehicleId);
-      const nav = await utilities.getNav();
+      console.log("Fetching vehicle details for ID:", vehicleId)
+      const vehicleData = await invModel.getInventoryByInventoryId(vehicleId)
+      console.log("Fetched vehicle data:", vehicleData);
+
+      const nav = await utilities.getNav()
 
       if (!vehicleData) {
+          console.error("No vehicle found for ID:", vehicleId)
           return res.status(404).render("errors/error", {
               title: "Vehicle Not Found",
               message: "The vehicle you are looking for does not exist.",
               nav,
-          });
+          })
       }
 
       res.render("inventory/vehicleDetail", {
           title: `${vehicleData.inv_make} ${vehicleData.inv_model}`,
           vehicle: vehicleData,
           nav,
-      });
+      })
   } catch (error) {
-      console.error("Error fetching vehicle details:", error);
+      console.error("Error fetching vehicle details:", error)
       res.status(500).render("errors/error", {
           title: "Internal Server Error",
           message: "An error occurred while fetching vehicle details.",
           nav: await utilities.getNav(),
-      });
+      })
   }
-};
+}
   
 /* ***************************
  *  Build the main vehicle management view
@@ -141,15 +145,24 @@ invCont.addClassification = async function (req, res) {
  *  Build the add inventory view
  *************************** */
 invCont.buildAddInventory = async function (req, res) {
-    const nav = await utilities.getNav()
-    const classifications = await utilities.buildClassificationList()
+  try {
+      const nav = await utilities.getNav()
+      const classifications = await utilities.buildClassificationList()
 
-    res.render("inventory/addInventory", {
-        title: "Add Vehicle",
-        errors: null,
-        nav,
-        classifications,
-    })
+      res.render("inventory/addInventory", {
+          title: "Add Vehicle",
+          errors: null,
+          nav,
+          classifications,
+      })
+  } catch (error) {
+      console.error("Error building add inventory view:", error)
+      res.status(500).render("errors/error", {
+          title: "Internal Server Error",
+          message: "An error occurred while building the add inventory view.",
+          nav: await utilities.getNav(),
+      })
+  }
 }
 
 /* ***************************
@@ -208,44 +221,71 @@ invCont.addInventory = async function (req, res) {
 
 /* ***************************
  *  Return Inventory by Classification As JSON
- * ************************** */
+ *************************** */
 invCont.getInventoryJSON = async (req, res) => {
-    const classification_id = parseInt(req.params.classification_id)
-    const invData = await invModel.getInventoryByClassificationId(classification_id)
-    if (invData[0].inv_id) {
+  const classification_id = parseInt(req.params.classification_id)
+  
+  try {
+      const invData = await invModel.getInventoryByClassificationId(classification_id)
+
+      if (invData.length === 0) {
+          return res.status(404).json({ message: "No inventory found." })
+      }
+
       return res.json(invData)
-    } else {
-      next(new Error("No data returned"))
-    }
+  } catch (error) {
+      console.error("Error fetching inventory data:", error)
+      return res.status(500).json({ message: "An error occurred while fetching inventory data." })
   }
+}
 
 /* ***************************
  *  Build edit inventory view
  * ************************** */
 invCont.editInventoryView = async function (req, res, next) {
-  const inv_id = parseInt(req.params.inv_id)
-  let nav = await utilities.getNav()
-  const itemData = await invModel.getInventoryById(inv_id)
-  const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
-  const itemName = `${itemData.inv_make} ${itemData.inv_model}`
-  res.render("./inventory/edit-inventory", {
-    title: "Edit " + itemName,
-    nav,
-    classificationSelect: classificationSelect,
-    errors: null,
-    inv_id: itemData.inv_id,
-    inv_make: itemData.inv_make,
-    inv_model: itemData.inv_model,
-    inv_year: itemData.inv_year,
-    inv_description: itemData.inv_description,
-    inv_image: itemData.inv_image,
-    inv_thumbnail: itemData.inv_thumbnail,
-    inv_price: itemData.inv_price,
-    inv_miles: itemData.inv_miles,
-    inv_color: itemData.inv_color,
-    classification_id: itemData.classification_id
-  })
-}
+  const inventoryId = parseInt(req.params.inventoryId); // Ensure this matches the route
+  let nav = await utilities.getNav();
+  
+  try {
+      const itemData = await invModel.getInventoryByInventoryId(inventoryId); // Fetch item
+      if (!itemData) { // Check if data is returned
+          console.error("Item not found for ID:", inventoryId);
+          return res.status(404).render("errors/error", {
+              title: "Item Not Found",
+              message: "The item you are trying to edit does not exist.",
+              nav,
+          });
+      }
+
+      const classificationSelect = await utilities.buildClassificationList(itemData.classification_id); // Correct to access the first item
+      const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+      
+      res.render("inventory/editInventory", {
+          title: "Edit " + itemName,
+          nav,
+          classificationSelect,
+          errors: null,
+          inv_id: itemData.inv_id,
+          inv_make: itemData.inv_make,
+          inv_model: itemData.inv_model,
+          inv_year: itemData.inv_year,
+          inv_description: itemData.inv_description,
+          inv_image: itemData.inv_image,
+          inv_thumbnail: itemData.inv_thumbnail,
+          inv_price: itemData.inv_price,
+          inv_miles: itemData.inv_miles,
+          inv_color: itemData.inv_color,
+          classification_id: itemData.classification_id
+      });
+  } catch (error) {
+      console.error("Error fetching inventory data:", error);
+      res.status(500).render("errors/error", {
+          title: "Internal Server Error",
+          message: "An error occurred while trying to fetch the inventory item.",
+          nav,
+      });
+  }
+};
 
 /* ***************************
  *  Update Inventory Data

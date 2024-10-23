@@ -9,7 +9,7 @@ router.use(express.json())
 router.use(express.urlencoded({ extended: true }))
 
 // Account Management Route
-router.get("/", utilities.checkLogin, utilities.handleErrors(accountController.buildManagement))
+router.get("/account-management", utilities.checkLogin,utilities.handleErrors(accountController.buildAccountManagementView))
 
 // Login Routes
 router.get("/login", utilities.handleErrors(accountController.buildLogin))
@@ -35,7 +35,7 @@ router.post(
 )
 
 // Update Account Handlers
-router.get("update/:accountId", utilities.handleErrors(accountController.buildUpdate))
+router.get("/update/:accountId", utilities.handleErrors(accountController.buildUpdate))
 router.post(
   "/update",
   regValidate.updateRules(),

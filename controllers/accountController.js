@@ -9,41 +9,41 @@ require("dotenv").config()
  *  Process login post request
  * ************************************ */
 async function accountLogin(req, res) {
-  let nav = await utilities.getNav()
+  let nav = await utilities.getNav();
   const { account_email, account_password } = req.body
-  const accountData = await accountModel.getAccountByEmail(account_email)
-  if (!accountData) {
-    req.flash("notice", "Please check your credentials and try again.")
-    res.status(400).render("account/login", {
-      title: "Login",
-      nav,
-      errors: null,
-      account_email,
-    })
-    return
-  }
+  
+  console.log("Login attempt with:", { account_email })
+
   try {
-    if (await bcrypt.compare(account_password, accountData.account_password)) {
-      delete accountData.account_password
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: 3600 * 1000 })
-      if(process.env.NODE_ENV === 'development') {
-        res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
-      } else {
-        res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
-      }
-      return res.redirect("/")
+    const accountData = await accountModel.getAccountByEmail(account_email)
+    console.log("Account data retrieved:", accountData)
+    
+    if (!accountData) {
+      req.flash("notice", "Invalid credentials. Please try again.");
+      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })
     }
-    else {
-      req.flash("notice", "Please check your credentials and try again.")
-      res.status(400).render("/", {
-        title: "Login",
-        nav,
-        errors: null,
-        account_email,
-      })
+
+    const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
+    console.log("Password match:", passwordMatch);
+    
+    if (passwordMatch) {
+      delete accountData.account_password;
+      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
+      const cookieOptions = {
+        httpOnly: true,
+        maxAge: 3600 * 1000,
+        ...(process.env.NODE_ENV !== 'development' && { secure: true })
+      };
+      res.cookie("jwt", accessToken, cookieOptions)
+      return res.redirect("account/account-management")
+    } else {
+      req.flash("notice", "Invalid credentials. Please try again.");
+      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })
     }
   } catch (error) {
-    throw new Error('Access Forbidden')
+    console.error("Error during login process:", error)
+    req.flash("notice", "An error occurred during login. Please try again.")
+    return res.status(500).render("account/login", { title: "Login", nav, errors: null, account_email })
   }
 }
 
@@ -66,7 +66,7 @@ async function buildAccountManagementView(req, res) {
   let nav = await utilities.getNav()
   const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
 
-  res.render("/", {
+  res.render("account/account-management", {
     title: "Account Management",
     nav,
     errors: null,
@@ -83,7 +83,7 @@ async function accountLogout(req, res) {
   delete res.locals.accountData
   res.locals.loggedin = 0
   req.flash("notice", "Logout successful.")
-  res.redirect("/")
+  res.redirect("account/login")
 }
 
 /* ****************************************

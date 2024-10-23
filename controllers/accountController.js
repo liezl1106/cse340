@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken")
 require("dotenv").config()
 
 /* ****************************************
- *  Process login request
+ *  Process login post request
  * ************************************ */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav()
@@ -31,11 +31,11 @@ async function accountLogin(req, res) {
       } else {
         res.cookie("jwt", accessToken, { httpOnly: true, secure: true, maxAge: 3600 * 1000 })
       }
-      return res.redirect("account/account-management")
+      return res.redirect("/account/")
     }
     else {
-      req.flash("message notice", "Please check your credentials and try again.")
-      res.status(400).render("account/login", {
+      req.flash("notice", "Please check your credentials and try again.")
+      res.status(400).render("/account/", {
         title: "Login",
         nav,
         errors: null,
@@ -60,10 +60,10 @@ async function buildLogin(req, res, next) {
 }
 
 /* ****************************************
- *  Build Account Management View
+ *  Process account management get request
  * ************************************ */
 async function buildAccountManagementView(req, res) {
-  let nav = await utilities.getNav();
+  let nav = await utilities.getNav()
   const unread = await messageModel.getMessageCountById(res.locals.accountData.account_id)
 
   res.render("account/account-management", {
@@ -72,6 +72,7 @@ async function buildAccountManagementView(req, res) {
     errors: null,
     unread, 
   })
+  return 
 }
 
 /* ****************************************
@@ -82,7 +83,7 @@ async function accountLogout(req, res) {
   delete res.locals.accountData
   res.locals.loggedin = 0
   req.flash("notice", "Logout successful.")
-  res.redirect("account/login")
+  res.redirect("/")
 }
 
 /* ****************************************

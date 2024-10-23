@@ -18,7 +18,7 @@ validate.classificationRules = () => {
 }
 
 /* ******************************
- * Check classification data
+ * Check data and return errors or continue to registration
  * ***************************** */
 validate.checkClassificationData = async (req, res, next) => {
   const errors = validationResult(req);
@@ -39,21 +39,86 @@ validate.checkClassificationData = async (req, res, next) => {
  * ********************************* */
 validate.inventoryRules = () => {
   return [
-    body("inv_make").trim().escape().notEmpty().withMessage("Make value is missing."),
-    body("inv_model").trim().escape().notEmpty().withMessage("Please provide a model."),
-    body("inv_year").trim().escape().isNumeric().withMessage("Year must be a number."),
-    body("inv_description").trim().escape().notEmpty().withMessage("Please provide a description."),
-    body("inv_image").trim().escape().notEmpty().withMessage("Please provide an image."),
-    body("inv_thumbnail").trim().escape().notEmpty().withMessage("Please provide a thumbnail."),
-    body("inv_price").trim().escape().isNumeric().withMessage("Price must be a number."),
-    body("inv_miles").trim().escape().isNumeric().withMessage("Miles must be a number."),
-    body("inv_color").trim().escape().notEmpty().withMessage("Please provide a color."),
-    body("classification_id").trim().escape().isInt().withMessage("Please provide a valid classification ID."),
+    // Make is required and must be string
+    body("inv_make")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Make value is missing")
+      .isLength({ min: 1 })
+      .withMessage("Please provide a make."), // on error this message is sent.
+
+    body("inv_model")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide a model."),
+
+    body("inv_year")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Year value missing.")
+      .isNumeric()
+      .withMessage("Year must be a number."),
+
+    body("inv_description")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide a description."),
+
+    body("inv_image")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide an image."),
+
+    body("inv_thumbnail")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide a thumbnail."),
+
+    body("inv_price")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Price value is missing.")
+      .isNumeric()
+      .withMessage("Price must be a number."),
+
+    body("inv_miles")
+      .trim()
+      .escape()
+      .notEmpty()
+      .withMessage("Miles value is missing.")
+      .isNumeric()
+      .withMessage("Miles must be a number."),
+
+    body("inv_color")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .withMessage("Please provide a color."),
+
+    body("classification_id")
+      .trim()
+      .escape()
+      .notEmpty()
+      .isLength({ min: 1 })
+      .isInt()
+      .withMessage("Please provide a make."),
   ]
 }
 
 /* ******************************
- * Check inventory data
+ * Check data and return errors or continue to registration
  * ***************************** */
 validate.checkInventoryData = async (req, res, next) => {
   let errors = [];
@@ -90,11 +155,11 @@ validate.checkInventoryData = async (req, res, next) => {
       inv_price,
       inv_miles,
       inv_color,
-    });
-    return;
+    })
+    return
   }
-  next();
-};
+  next()
+}
 
 /* ******************************
  * Check data and return errors or continue to update. Errors will redirect to edit view
@@ -136,7 +201,7 @@ validate.checkUpdateData = async (req, res, next) => {
       inv_price,
       inv_miles,
       inv_color,
-    });
+    })
     return
   }
   next()

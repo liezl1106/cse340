@@ -22,35 +22,35 @@ app.use(express.static(path.join(__dirname, 'public')))
 /* ***********************
  * Middleware
  ************************/
-app.use(session({
-  store: new (require('connect-pg-simple')(session))({
-    createTableIfMissing: true,
-    pool,
-  }),
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: true,
-  name: 'sessionId',
-}))
-
-app.use(cookieParser())
-app.use(utilities.checkJWTToken)
-
-// ** Add body parsing middleware here **
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-
-app.use(bodyParser.urlencoded({ extended: true })); // for form submissions
-app.use(bodyParser.json()); // for JSON requests
+app.use(
+  session({
+    store: new (require("connect-pg-simple")(session))({
+      createTableIfMissing: true,
+      pool,
+    }),
+    secret: process.env.SESSION_SECRET,
+    resave: true,
+    saveUninitialized: true,
+    name: "sessionId",
+  })
+)
 
 /* ***********************
  * Express Messages Middleware
  *************************/
-app.use(require('connect-flash')());
-app.use(function(req, res, next){
-  res.locals.messages = require('express-messages')(req, res)
+app.use(require("connect-flash")())
+app.use(function (req, res, next) {
+  res.locals.messages = require("express-messages")(req, res)
   next()
 })
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ // for parsing application/x-www-form-urlencoded
+  extended: true
+}))
+// Cookie parser
+app.use(cookieParser())
+// JWT checker
+app.use(utilities.checkJWTToken)
 
 /* ***********************
  * View Engine and Templates
@@ -72,13 +72,17 @@ app.use("/inv", inventoryRoute)
 app.use("/account", accountRoute)
 // Message routes
 app.use("/message", messageRoute)
+// Intentional error route. Used for testing
+app.use(async (req, res, next) => {
+  next({status: 404, message: 'Unfortunately, we don\'t have that page in stock.'})
+})
 
 /* ***********************
  * Express Error Handler
  * Place after all other middleware
  *************************/
 app.use(async (err, req, res, next) => {
-  let nav = await utilities.getNav();
+  let nav = await utilities.getNav()
   console.error(`Error at: "${req.originalUrl}": ${err.message}`)
   res.render("errors/error", {
     title: err.status || 'Server Error',

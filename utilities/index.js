@@ -153,9 +153,8 @@ Util.buildClassificationList = async function (classification_id = null) {
  * Wrap other function in this for 
  * General Error Handling
  **************************************** */
-Util.handleErrors = (fn) => (req, res, next) => {
+Util.handleErrors = (fn) => (req, res, next) =>
   Promise.resolve(fn(req, res, next)).catch(next)
-}
 
 /* **************************************
  * Format vehicle info for detail view
@@ -214,6 +213,24 @@ Util.checkJWTToken = (req, res, next) => {
    next()
   }
  }
+
+ /* ****************************************
+* Function to update the browser cookie
+**************************************** */
+Util.updateCookie = (accountData, res) => {
+  const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: 3600,
+  })
+  if (process.env.NODE_ENV === "development") {
+    res.cookie("jwt", accessToken, { httpOnly: true, maxAge: 3600 * 1000 })
+  } else {
+    res.cookie("jwt", accessToken, {
+      httpOnly: true,
+      secure: true,
+      maxAge: 3600 * 1000,
+    })
+  }
+}
 
 /* ****************************************
  *  Check Login

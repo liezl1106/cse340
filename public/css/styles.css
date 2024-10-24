@@ -495,7 +495,7 @@ h2 {
 
 /* Table cell styles */
 #inventoryDisplay td {
-  border: 1px solid #ccc; /* Light gray border */
+  border: 0.5px solid #ccc; /* Light gray border */
   padding: 10px; /* Padding inside cells */
 }
 

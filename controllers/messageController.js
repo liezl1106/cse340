@@ -6,7 +6,7 @@ const accountModel = require("../models/account-model")
 const messageModel = require("../models/message-model")
 
 /* ****************************************
- *  Deliver inbox view get
+ *  Build inbox view get
  * ************************************ */
 async function buildInbox(req, res, next) {
   let nav = await utilities.getNav()
@@ -31,7 +31,7 @@ async function buildInbox(req, res, next) {
 }
 
 /* ****************************************
- *  Deliver archive view get
+ *  Build archive view get
  * ************************************ */
 async function buildArchive(req, res, next) {
   let nav = await utilities.getNav()
@@ -56,7 +56,7 @@ async function buildArchive(req, res, next) {
 }
 
 /* ****************************************
- *  Deliver message view get
+ *  Build message view get
  * ************************************ */
 async function buildMessageView(req, res, next) {
   const messageId = req.params.messageId;
@@ -77,7 +77,7 @@ async function buildMessageView(req, res, next) {
 }
 
 /* ****************************************
- *  Deliver compose view get
+ *  Build compose view get
  * ************************************ */
 async function buildCompose(req, res, next) {
   const nav = await utilities.getNav();

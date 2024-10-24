@@ -1,8 +1,8 @@
 const pool = require("../database/")
 
-/**
- * Get messages sent to account ID
- */
+/* ****************************************
+ *  Get messages sent to account ID
+ * ************************************ */
 async function getMessagesToId(accountId, archived = false) {
   const query = `
     SELECT message_id, message_subject, message_body, message_created, 
@@ -21,9 +21,9 @@ async function getMessagesToId(accountId, archived = false) {
   }
 }
 
-/**
- * Get a message by ID
- */
+/* ****************************************
+ *  Get a message by ID
+ * ************************************ */
 async function getMessageById(messageId) {
   const query = `
     SELECT message_id, message_subject, message_body, 
@@ -40,9 +40,9 @@ async function getMessageById(messageId) {
   }
 }
 
-/**
- * Send a message
- */
+/* ****************************************
+ *  Send a message
+ * ************************************ */
 async function sendMessage({ message_subject, message_body, message_to, message_from }) {
   const query = `INSERT INTO public.message (message_subject, message_body, message_to, message_from)
                  VALUES ($1, $2, $3, $4)`
@@ -54,9 +54,9 @@ async function sendMessage({ message_subject, message_body, message_to, message_
   }
 }
 
-/**
- * Count messages for an account
- */
+/* ****************************************
+ *  Count messages for an account
+ * ************************************ */
 async function getMessageCountById(accountId, archived = false) {
   const query = `SELECT COUNT(*) FROM public.message
                  WHERE message_to = $1 AND message_archived = $2`
@@ -69,9 +69,9 @@ async function getMessageCountById(accountId, archived = false) {
   }
 }
 
-/**
- * Toggle a message's read status
- */
+/* ****************************************
+ *  Toggle a message's read status
+ * ************************************ */
 async function toggleRead(messageId) {
   const query = `UPDATE public.message SET message_read = NOT message_read 
                  WHERE message_id = $1 RETURNING message_read`
@@ -84,9 +84,10 @@ async function toggleRead(messageId) {
   }
 }
 
-/**
- * Toggle a message's archived status
- */
+/* ****************************************
+ *  Toggle a message's archived status
+ * ************************************ */
+
 async function toggleArchived(messageId) {
   const query = `UPDATE public.message SET message_archived = NOT message_archived 
                  WHERE message_id = $1 RETURNING message_archived`
@@ -99,9 +100,9 @@ async function toggleArchived(messageId) {
   }
 }
 
-/**
- * Delete a message
- */
+/* ****************************************
+ *  Delete a message
+ * ************************************ */
 async function deleteMessage(messageId) {
   const query = `DELETE FROM public.message WHERE message_id = $1`
   

@@ -423,49 +423,62 @@ invCont.deleteInventory = async function (req, res) {
   }
 }
 
+/* ***************************
+ *  Build Inventory Data
+ *************************** */
 invCont.buildEditInventory = async function (req, res, next) {
-  const inventoryId = req.params.inventoryId; // Ensure this matches the route
-  let nav = await utilities.getNav();
-  
-  try {
-      const itemData = await invModel.getInventoryByInventoryId(inventoryId); // Fetch item
-      if (!itemData || itemData.length === 0) { // Check if data is returned
-          console.error("Item not found for ID:", inventoryId);
-          return res.status(404).render("errors/error", {
-              title: "Item Not Found",
-              message: "The item you are trying to edit does not exist.",
-              nav,
-          });
-      }
+    const inventoryId = parseInt(req.params.inventoryId);
+    let nav = await utilities.getNav();
 
-      const classificationSelect = await utilities.buildClassificationList(itemData[0].classification_id); // Corrected to access the first item
-      const itemName = `${itemData[0].inv_make} ${itemData[0].inv_model}`;
-      
-      res.render("inventory/editInventory", {
-          title: "Edit " + itemName,
-          nav,
-          classificationSelect,
-          errors: null,
-          inv_id: itemData[0].inv_id,
-          inv_make: itemData[0].inv_make,
-          inv_model: itemData[0].inv_model,
-          inv_year: itemData[0].inv_year,
-          inv_description: itemData[0].inv_description,
-          inv_image: itemData[0].inv_image,
-          inv_thumbnail: itemData[0].inv_thumbnail,
-          inv_price: itemData[0].inv_price,
-          inv_miles: itemData[0].inv_miles,
-          inv_color: itemData[0].inv_color,
-          classification_id: itemData[0].classification_id
-      });
-  } catch (error) {
-      console.error("Error fetching inventory data:", error);
-      res.status(500).render("errors/error", {
-          title: "Internal Server Error",
-          message: "An error occurred while trying to fetch the inventory item.",
-          nav,
-      });
-  }
-};
+    try {
+        // Fetch item data based on inventoryId
+        const itemData = await invModel.getInventoryByInventoryId(inventoryId);
+        console.log("Item Data:", itemData);
+
+        // Check if itemData is returned and has classification_id
+        if (!itemData || !itemData.classification_id) {
+            console.error("Item not found or classification_id missing for ID:", inventoryId);
+            return res.status(404).render("errors/error", {
+                title: "Item Not Found",
+                message: "The item you are trying to edit does not exist.",
+                nav,
+            });
+        }
+
+        // Fetch classifications for the dropdown
+        const classifications = await invModel.getClassifications(); // Adjust this to your actual function
+
+        // Build classification select options
+        const classificationSelect = await utilities.buildClassificationList(itemData.classification_id);
+        const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
+
+        // Render the edit inventory view
+        res.render("inventory/editInventory", {
+            title: "Edit " + itemName,
+            nav,
+            classifications, // Pass classifications to the view
+            classificationSelect,
+            errors: null,
+            inv_id: itemData.inv_id,
+            inv_make: itemData.inv_make,
+            inv_model: itemData.inv_model,
+            inv_year: itemData.inv_year,
+            inv_description: itemData.inv_description,
+            inv_image: itemData.inv_image,
+            inv_thumbnail: itemData.inv_thumbnail,
+            inv_price: itemData.inv_price,
+            inv_miles: itemData.inv_miles,
+            inv_color: itemData.inv_color,
+            classification_id: itemData.classification_id
+        });
+    } catch (error) {
+        console.error("Error fetching inventory data:", JSON.stringify(error));
+        res.status(500).render("errors/error", {
+            title: "Internal Server Error",
+            message: "An error occurred while trying to fetch the inventory item.",
+            nav,
+        })
+    }
+}
 
 module.exports = invCont

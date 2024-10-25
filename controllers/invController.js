@@ -269,78 +269,63 @@ invCont.editInventoryView = async function (req, res, next) {
 
 /* ***************************
  *  Update Inventory Data
- *************************** */
+ * ************************** */
 invCont.updateInventory = async function (req, res, next) {
-    let nav = await utilities.getNav();
+    let nav = await utilities.getNav()
     const {
-        inv_id,
-        inv_make,
-        inv_model,
-        inv_description,
-        inv_image,
-        inv_thumbnail,
-        inv_price,
-        inv_year,
-        inv_miles,
-        inv_color,
-        classification_id,
-    } = req.body;
-
-    try {
-        // Update the inventory item
-        const updateResult = await invModel.updateInventory(
-            inv_id,  
-            inv_make,
-            inv_model,
-            inv_description,
-            inv_image,
-            inv_thumbnail,
-            inv_price,
-            inv_year,
-            inv_miles,
-            inv_color,
-            classification_id
-        );
-
-        // Check if the update was successful
-        if (updateResult) {
-            const itemName = `${inv_make} ${inv_model}`;
-            req.flash("notice", `The ${itemName} was successfully updated.`);
-            res.redirect("/inv/management"); // Redirect to the management page
-        } else {
-            throw new Error("Update failed"); // Explicitly throw an error
-        }
-    } catch (error) {
-        console.error("Error updating inventory:", error.message);
-
-        // Build classification list for the form
-        const classifications = await invModel.getClassifications(); // Get all classifications
-        const classificationSelect = await utilities.buildClassificationList(classification_id);
-
-        // Set an error flash message
-        req.flash("notice", "Sorry, the update failed. Please try again.");
-
-        // Render the edit view with current data and error message
-        res.status(400).render("inventory/editInventory", {
-            title: "Edit " + itemName,
-            nav,
-            classifications, // Pass classifications to the view
-            classificationSelect,
-            errors: null, // Adjust as necessary for actual validation errors
-            inv_id,
-            inv_make,
-            inv_model,
-            inv_year,
-            inv_description,
-            inv_image,
-            inv_thumbnail,
-            inv_price,
-            inv_miles,
-            inv_color,
-            classification_id
-        });
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+      classification_id,
+    } = req.body
+    const updateResult = await invModel.updateInventory(
+      inv_id,  
+      inv_make,
+      inv_model,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_year,
+      inv_miles,
+      inv_color,
+      classification_id
+    )
+  
+    if (updateResult) {
+      const itemName = updateResult.inv_make + " " + updateResult.inv_model
+      req.flash("notice", `The ${itemName} was successfully updated.`)
+      res.redirect("/inv/management")
+    } else {
+      const classificationSelect = await utilities.buildClassificationList(classification_id)
+      const itemName = `${inv_make} ${inv_model}`
+      req.flash("notice", "Sorry, the insert failed.")
+      res.status(501).render("inventory/edit-inventory", {
+      title: "Edit " + itemName,
+      nav,
+      classificationSelect: classificationSelect,
+      errors: null,
+      inv_id,
+      inv_make,
+      inv_model,
+      inv_year,
+      inv_description,
+      inv_image,
+      inv_thumbnail,
+      inv_price,
+      inv_miles,
+      inv_color,
+      classification_id
+      })
     }
-};
+}
 
 /* ***************************
  *  Build the Delete Inventory View

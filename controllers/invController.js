@@ -243,53 +243,29 @@ invCont.getInventoryJSON = async (req, res) => {
  *  Build edit inventory view
  * ************************** */
 invCont.editInventoryView = async function (req, res, next) {
-    const inventoryId = parseInt(req.params.inventoryId); // Ensure this matches the route
-    let nav = await utilities.getNav();
-  
-    try {
-        const itemData = await invModel.getInventoryByInventoryId(inventoryId); // Fetch item
-        if (!itemData) { // Check if data is returned
-            console.error("Item not found for ID:", inventoryId);
-            return res.status(404).render("errors/error", {
-                title: "Item Not Found",
-                message: "The item you are trying to edit does not exist.",
-                nav,
-            });
-        }
-
-        // Fetch all classifications for the dropdown
-        const classifications = await invModel.getClassifications(); // Adjust this to your actual function
-        const classificationSelect = await utilities.buildClassificationList(itemData.classification_id); // Current selection
-
-        const itemName = `${itemData.inv_make} ${itemData.inv_model}`;
-        
-        res.render("inventory/editInventory", {
-            title: "Edit " + itemName,
-            nav,
-            classifications, // Pass all classifications to the view
-            classificationSelect,
-            errors: null,
-            inv_id: itemData.inv_id,
-            inv_make: itemData.inv_make,
-            inv_model: itemData.inv_model,
-            inv_year: itemData.inv_year,
-            inv_description: itemData.inv_description,
-            inv_image: itemData.inv_image,
-            inv_thumbnail: itemData.inv_thumbnail,
-            inv_price: itemData.inv_price,
-            inv_miles: itemData.inv_miles,
-            inv_color: itemData.inv_color,
-            classification_id: itemData.classification_id
-        });
-    } catch (error) {
-        console.error("Error fetching inventory data:", error);
-        res.status(500).render("errors/error", {
-            title: "Internal Server Error",
-            message: "An error occurred while trying to fetch the inventory item.",
-            nav,
-        });
-    }
-};
+    const inv_id = parseInt(req.params.inv_id)
+    let nav = await utilities.getNav()
+    const itemData = await invModel.getInventoryById(inv_id)
+    const classificationSelect = await utilities.buildClassificationList(itemData.classification_id)
+    const itemName = `${itemData.inv_make} ${itemData.inv_model}`
+    res.render("./inventory/edit-inventory", {
+      title: "Edit " + itemName,
+      nav,
+      classificationSelect: classificationSelect,
+      errors: null,
+      inv_id: itemData.inv_id,
+      inv_make: itemData.inv_make,
+      inv_model: itemData.inv_model,
+      inv_year: itemData.inv_year,
+      inv_description: itemData.inv_description,
+      inv_image: itemData.inv_image,
+      inv_thumbnail: itemData.inv_thumbnail,
+      inv_price: itemData.inv_price,
+      inv_miles: itemData.inv_miles,
+      inv_color: itemData.inv_color,
+      classification_id: itemData.classification_id
+    })
+}
 
 /* ***************************
  *  Update Inventory Data

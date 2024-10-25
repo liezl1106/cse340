@@ -30,14 +30,14 @@ body {
   font-size: 36px;
   font-weight: bold;
   text-decoration: none; 
-  color: #000001;
+  color: #000; /* Improved contrast */
 }
 
 /* Tools */
 #tools a {
   font-size: 18px;
   text-decoration: none; 
-  color: #000001;
+  color: #000; /* Improved contrast */
 }
 
 /* Navigation */
@@ -63,7 +63,7 @@ nav li {
 
 nav li a {
   text-decoration: none; 
-  color: hsl(0, 0%, 4%);
+  color: #333; /* Darker gray for better visibility */
   font-size: 20px; 
   transition: color 0.3s; 
   display: block; /* Makes the entire area of the link clickable */
@@ -71,14 +71,14 @@ nav li a {
 }
 
 nav li a:hover {
-  color: #fa5305;
+  color: #fa5305; /* Ensure this contrasts well with background */
 }
 
 /* Main */
 main {
   padding: 20px;
   font-family: Roboto, sans-serif;
-  color: hsl(0, 82%, 6%); 
+  color: #333; /* Darker text color for readability */
   background-color: #ffffff;
 }
 
@@ -92,7 +92,7 @@ main {
 .text-area {
   flex: 0 0 auto; 
   padding: 20px;
-  color: #1d1d1d; 
+  color: #333; /* Consistent with main text */
 }
 
 .img-area-1 {
@@ -236,7 +236,7 @@ input[type="text"] {
 /* Button styles */
 input[type="submit"] {
   background-color: #054373; 
-  color: rgb(27, 26, 26); 
+  color: white; /* Improved contrast */
   padding: 12px; 
   border: none; 
   border-radius: 5px; 
@@ -251,8 +251,6 @@ input[type="submit"]:hover {
 
 /* Heading styles */
 h1 {
-  /*text-align: center; /* Center the heading */
-  /*color: #007BFF; /* Blue color for the heading */
   margin-bottom: 20px; /* Space below the heading */
 }
 
@@ -300,7 +298,7 @@ h1 {
 /* Input focus styles */
 #loginForm input[type="email"]:focus,
 #loginForm input[type="password"]:focus {
-  border-color: #242527; 
+  border-color: #054373; /* Clear contrast on focus */
   outline: none; 
 }
 
@@ -410,36 +408,11 @@ div a:hover {
   background-color: #11151a; 
 }
 
-/* Reveal button styles */
-.reveal-button {
-  cursor: pointer; 
-  color: #1d2125; 
-  display: inline-block; 
-  margin-top: 5px; 
-}
-
-/* Reveal button active styles */
-.reveal-button.active {
-  font-weight: bold; /* Make it bold when active */
-}
-
 /* Manage inventory title styles */
 h2 {
   text-align: center; /* Center the secondary heading */
   color: #141415; /* Black */
   margin: 20px 0; /* Space above and below the heading */
-}
-
-/* Notice styles for error messages */
-.notice {
-  list-style-type: none; /* Remove bullet points */
-  padding: 0; /* Remove padding */
-  margin: 20px 0; /* Space around the notice */
-  background-color: #f8d7da; /* Light red background for errors */
-  color: #721c24; /* Dark red text for errors */
-  border: 1px solid #f5c6cb; /* Light red border */
-  border-radius: 4px; /* Rounded corners */
-  padding: 10px; /* Padding inside notice */
 }
 
 /* No bullet style for the list */
@@ -501,11 +474,16 @@ h2 {
 
 /* Footer */
 footer {
-  background-color: #ffcea2;
+  background-color: #e3b185; /* Darker shade for contrast */
   text-align: center; 
   padding: 20px; 
   font-family: 'Roboto', sans-serif;
   color: #1d1d1d; 
+}
+
+/* Footer text */
+footer p {
+  margin: 10px 0; /* Space above and below text */
 }
 
 /* Mobile Styles */
@@ -556,6 +534,11 @@ footer {
   .card {
     flex: 1 1 100%; 
   }
+
+  #inventoryDisplay {
+    font-size: 14px; /* Smaller text on mobile */
+    width: 100%; /* Full width for tables */
+  }
 }
 
 /* Tablet Styles */
@@ -600,12 +583,5 @@ footer {
 
   .card {
     flex: 1 1 calc(50% - 20px); 
-  }
-}
-
-/* Responsive table styles */
-@media (max-width: 600px) {
-  #inventoryDisplay {
-      font-size: 14px; /* Smaller text on mobile */
   }
 }

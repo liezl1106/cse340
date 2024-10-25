@@ -1,0 +1,611 @@
+/******* Change Box Model ***************/
+* {
+    margin: 0;
+    padding: 5px;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0; 
+    background-image: url('/images/site/small_check.png'); 
+    background-size: cover;
+    background-repeat: no-repeat; 
+    background-position: center; 
+    color: #fff;
+    font-family: 'Roboto', sans-serif; 
+  }
+  
+  /* Header */
+  #top-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px; 
+    background-color: #ffffff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Site Name */
+  .siteName a {
+    font-size: 36px;
+    font-weight: bold;
+    text-decoration: none; 
+    color: #000001;
+  }
+  
+  /* Tools */
+  #tools a {
+    font-size: 18px;
+    text-decoration: none; 
+    color: #000001;
+  }
+  
+  /* Navigation */
+  nav {
+    background-color: #ffcea2;
+    padding: 10px; 
+  }
+  
+  nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  nav li {
+    flex: 1; 
+    text-align: center; 
+  }
+  
+  nav li a {
+    text-decoration: none; 
+    color: hsl(0, 0%, 4%);
+    font-size: 20px; 
+    transition: color 0.3s; 
+    display: block; /* Makes the entire area of the link clickable */
+    padding: 10px; /* Adds padding for better spacing */
+  }
+  
+  nav li a:hover {
+    color: #fa5305;
+  }
+  
+  /* Main */
+  main {
+    padding: 20px;
+    font-family: Roboto, sans-serif;
+    color: hsl(0, 82%, 6%); 
+    background-color: #ffffff;
+  }
+  
+  .text-img {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    align-items: center;
+  }
+  
+  .text-area {
+    flex: 0 0 auto; 
+    padding: 20px;
+    color: #1d1d1d; 
+  }
+  
+  .img-area-1 {
+    flex: 0 0 auto;
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    margin-left: 10px;
+  }
+  
+  .img-area-1 img {
+    width: 100%; 
+    height: auto;
+  }
+  
+  .btn-1 {
+    color: #1d1d1d;
+    background-color: bisque;
+    font-size: 18px;
+  }
+  
+  /* Main Vehicle Details Page */
+  .inline-container {
+    display: flex; /* Use flexbox for horizontal alignment */
+    align-items: flex-start; /* Align items at the top */
+  }
+  
+  .image-column {
+    flex: 1; /* Image column takes 1 part of the space */
+    max-width: 600px; /* Set a max width for the image column */
+    margin-right: 10px; /* Space between columns */
+  }
+  
+  .full-size-image {
+    max-width: 600px; /* Make the image responsive */
+    height: auto; /* Maintain aspect ratio */
+  }
+  
+  .details-column {
+    flex: 2; /* Details column takes 2 parts of the space */
+  }
+  
+  .details {
+    display: flex; /* Use flexbox for details */
+    flex-direction: column; /* Stack paragraphs vertically */
+  }
+  
+  .details p {
+    margin: 5px 0; /* Space between paragraphs */
+  }
+  
+  /* Main inv-details Page */
+  #inv-display {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+   
+  #inv-display li {
+    flex: 1 1 calc(33.33% - 20px); /* Adjusts to 3 items per row with spacing */
+    margin-bottom: 100px; /* Add some space between rows */
+  }
+   
+  /* Flex Container for Upgrades and Reviews */
+  .flex-container {
+    display: flex; 
+    justify-content: space-between;
+    margin-top: 100px; 
+  }
+  
+  /* Upgrades Section */
+  .img-area-2 {
+    display: flex; 
+    flex-wrap: wrap; 
+    justify-content: space-between; 
+    margin-top: 10px; 
+  }
+  
+  .upgrade {
+    text-align: center; 
+    margin: 10px; 
+    flex: 1 1 calc(50% - 20px); /* Two items per row, with some space */
+  }
+  
+  .upgrade img {
+    width: 100%; 
+    height: 150px; 
+    object-fit: cover; 
+    max-width: 150px; 
+  }
+  
+  .upgrade h4 {
+    margin-top: 10px; 
+  }
+  
+  .card {
+    text-align: center; 
+    margin: 20px; 
+    flex: 1; 
+  }
+  
+  .card h2 {
+    margin-bottom: 15px; 
+    font-size: 24px;
+  }
+  
+  /* Styles for the form */
+  .form-container {
+    background-color: #ffffff; 
+    border-radius: 10px; 
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    padding: 40px; 
+    width: 350px; 
+  }
+  
+  /* Form styles for addClassification.ejs */
+  label {
+    display: block; 
+    margin-bottom: 5px; 
+    color: #110f0f; 
+  }
+  
+  input[type="text"] {
+    width: 100%; /* Full width inputs */
+    padding: 12px; /* Inner padding */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Larger font size */
+    margin-bottom: 10px; /* Space below inputs */
+  }
+  
+  /* Error message styles */
+  .notice {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    margin: 20px 0;
+    border-radius: 5px;
+  }
+  
+  /* Button styles */
+  input[type="submit"] {
+    background-color: #054373; 
+    color: rgb(27, 26, 26); 
+    padding: 12px; 
+    border: none; 
+    border-radius: 5px; 
+    cursor: pointer; 
+    font-size: 16px; 
+    transition: background-color 0.3s; 
+  }
+  
+  input[type="submit"]:hover {
+    background-color: #2b2c2d; 
+  }
+  
+  /* Heading styles */
+  h1 {
+    /*text-align: center; /* Center the heading */
+    /*color: #007BFF; /* Blue color for the heading */
+    margin-bottom: 20px; /* Space below the heading */
+  }
+  
+  /* Notice styles */
+  .notice {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 20px 0; /* Space around the notice */
+    background-color: #f8d7da; /* Light red background for errors */
+    color: #721c24; /* Dark red text for errors */
+    border: 1px solid #f5c6cb; /* Light red border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside notice */
+  }
+  
+  /* Input box form styles */
+  #loginForm {
+    width: 300px; /* Set a width for the form */
+    margin: 0 auto; /* Center the form */
+    padding: 20px; /* Add padding */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #fff; /* White background */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Label styles */
+  #loginForm label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 10px; /* Space between labels */
+    font-weight: bold; /* Bold font for labels */
+  }
+  
+  /* Input styles */
+  #loginForm input[type="email"],
+  #loginForm input[type="password"],
+  #loginForm input[type="submit"] {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside inputs */
+    margin-top: 5px; /* Space above inputs */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+  }
+  
+  /* Input focus styles */
+  #loginForm input[type="email"]:focus,
+  #loginForm input[type="password"]:focus {
+    border-color: #242527; 
+    outline: none; 
+  }
+  
+  /* Submit button styles */
+  #loginForm input[type="submit"] {
+    background-color: #05498c; 
+    color: white; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+  }
+  
+  /* Submit button hover styles */
+  #loginForm input[type="submit"]:hover {
+    background-color: #034572; 
+  }
+  
+  /* Reveal button styles */
+  .reveal-button {
+    cursor: pointer; 
+    color: #121c27; 
+    margin-top: 5px; 
+    display: inline-block; 
+  }
+  
+  /* Reveal button active styles */
+  .reveal-button.active {
+    font-weight: bold; /* Make it bold when active */
+  }
+  
+  /* Signup link styles */
+  div {
+    text-align: center; /* Center the signup link */
+    margin-top: 20px; /* Space above the link */
+  }
+  
+  div a {
+    color: #181e25; 
+    text-decoration: none; /* Remove underline */
+  }
+  
+  div a:hover {
+    text-decoration: underline; /* Underline on hover */
+  }
+  
+  /* Account Registration Form */
+  /* Form container styles */
+  .form-container {
+    width: 400px; /* Set a width for the container */
+    margin: 0 auto; /* Center the container */
+    padding: 20px; /* Add padding */
+    background-color: #fff; /* White background */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  }
+  
+  /* Form title styles */
+  .register-form h2 {
+    text-align: center; 
+    color: #15191e; 
+    margin-bottom: 20px; 
+  }
+  
+  /* Group styles for each form field */
+  .form-group {
+    margin-bottom: 15px; /* Space below each group */
+  }
+  
+  /* Label styles */
+  .form-group label {
+    display: block; /* Make labels block elements */
+    margin-bottom: 5px; /* Space between label and input */
+    font-weight: bold; /* Bold font for labels */
+  }
+  
+  /* Input styles */
+  .register-form input[type="text"],
+  .register-form input[type="email"],
+  .register-form input[type="password"] {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding inside inputs */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 4px; /* Slightly rounded corners */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+  
+  /* Input focus styles */
+  .register-form input:focus {
+    border-color: #1c1e1f; /* Change border color on focus */
+    outline: none; /* Remove outline */
+  }
+  
+  /* Button styles */
+  .register-btn {
+    width: 100%; 
+    padding: 10px; 
+    background-color: #09121c; 
+    color: white; 
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+  }
+  
+  /* Button hover styles */
+  .register-btn:hover {
+    background-color: #11151a; 
+  }
+  
+  /* Reveal button styles */
+  .reveal-button {
+    cursor: pointer; 
+    color: #1d2125; 
+    display: inline-block; 
+    margin-top: 5px; 
+  }
+  
+  /* Reveal button active styles */
+  .reveal-button.active {
+    font-weight: bold; /* Make it bold when active */
+  }
+  
+  /* Manage inventory title styles */
+  h2 {
+    text-align: center; /* Center the secondary heading */
+    color: #141415; /* Black */
+    margin: 20px 0; /* Space above and below the heading */
+  }
+  
+  /* Notice styles for error messages */
+  .notice {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+    margin: 20px 0; /* Space around the notice */
+    background-color: #f8d7da; /* Light red background for errors */
+    color: #721c24; /* Dark red text for errors */
+    border: 1px solid #f5c6cb; /* Light red border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding inside notice */
+  }
+  
+  /* No bullet style for the list */
+  .no-bullet {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0; /* Remove padding */
+  }
+  
+  /* List item styles */
+  .no-bullet li {
+    margin-bottom: 10px; /* Space below each item */
+  }
+  
+  /* Button styles */
+  .btn {
+    display: inline-block; /* Inline-block for buttons */
+    padding: 10px 15px; /* Padding inside buttons */
+    background-color: #0b0d0f; /* Blue background */
+    color: white; /* White text */
+    text-decoration: none; /* Remove underline */
+    border-radius: 4px; /* Slightly rounded corners */
+    transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  /* Button hover styles */
+  .btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+  }
+  
+  /* Input box styles */
+  .input-box {
+    background-color: #fff; /* White background */
+    border: 1px solid #ccc; /* Light gray border */
+    border-radius: 5px; /* Rounded corners */
+    padding: 20px; /* Padding inside the box */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+    margin-top: 20px; /* Space above the input box */
+  }
+  
+  /* Table styles */
+  #inventoryDisplay {
+    width: 400px; 
+    border-collapse: collapse; /* Collapse borders */
+    margin-top: 15px; /* Space above the table */
+  }
+  
+  /* Table header styles */
+  #inventoryDisplay th {
+    background-color: #0e0f10; /* Blue background */
+    color: white; /* White text */
+    padding: 10px; /* Padding inside cells */
+  }
+  
+  /* Table cell styles */
+  #inventoryDisplay td {
+    border: 0.5px solid #ccc; /* Light gray border */
+    padding: 10px; /* Padding inside cells */
+  }
+  
+  /* Footer */
+  footer {
+    background-color: #ffcea2;
+    text-align: center; 
+    padding: 20px; 
+    font-family: 'Roboto', sans-serif;
+    color: #1d1d1d; 
+  }
+  
+  /* Mobile Styles */
+  @media (max-width: 600px) {
+    #top-header {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .siteName a {
+      font-size: 28px;
+    }
+  
+    #tools a {
+      font-size: 16px;
+    }
+  
+    nav ul {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    nav li {
+      margin-bottom: 10px;
+    }
+  
+    main {
+      padding: 10px;
+    }
+  
+    .form-container {
+      width: 90%; /* Responsive form width */
+    }
+  
+    .text-img {
+      flex-direction: column; 
+      align-items: center; 
+    }
+  
+    .flex-container {
+      flex-direction: column;
+    }
+  
+    .upgrade {
+      flex: 1 1 100%; /* Stack items on small screens */
+    }
+  
+    .card {
+      flex: 1 1 100%; 
+    }
+  }
+  
+  /* Tablet Styles */
+  @media (min-width: 601px) and (max-width: 900px) {
+    #top-header {
+      flex-direction: row;
+      justify-content: space-between;
+    }
+  
+    .siteName a {
+      font-size: 32px;
+    }
+  
+    #tools a {
+      font-size: 17px;
+    }
+  
+    nav ul {
+      flex-direction: row;
+    }
+  
+    nav li {
+      margin-right: 15px;
+    }
+  
+    main {
+      padding: 15px;
+    }
+  
+    .text-img {
+      flex-direction: row; 
+      justify-content: space-between; 
+    }
+  
+    .form-container {
+      width: 400px; /* Slightly larger for tablets */
+    }
+  
+    .upgrade {
+      flex: 1 1 calc(50% - 20px); 
+    }
+  
+    .card {
+      flex: 1 1 calc(50% - 20px); 
+    }
+  }
+  
+  /* Responsive table styles */
+  @media (max-width: 600px) {
+    #inventoryDisplay {
+        font-size: 14px; /* Smaller text on mobile */
+    }
+  }

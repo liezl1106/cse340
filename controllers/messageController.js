@@ -9,70 +9,71 @@ const messageModel = require("../models/message-model")
  *  Build inbox view get
  * ************************************ */
 async function buildInbox(req, res, next) {
-  let nav = await utilities.getNav()
-  let messages = await messageModel.getMessagesToId(
-    res.locals.accountData.account_id
-  )
-  const archivedMessages = await messageModel.getMessageCountById(
-    res.locals.accountData.account_id,
-    true
-  )
+  try {
+    const nav = await utilities.getNav()
+    const messages = await messageModel.getMessagesToId(res.locals.accountData.account_id)
+    const archivedMessages = await messageModel.getMessageCountById(res.locals.accountData.account_id, true)
 
-  let inboxTable = utilities.buildInbox(messages)
+    const inboxTable = utilities.buildInbox(messages)
 
-  res.render("message/inbox", {
-    title: `${res.locals.accountData.account_firstname} Inbox`,
-    nav,
-    errors: null,
-    inboxTable,
-    archived: false,
-    archivedMessages,
-  })
+    res.render("message/inbox", {
+      title: `${res.locals.accountData.account_firstname} Inbox`,
+      nav,
+      errors: null,
+      inboxTable,
+      archived: false,
+      archivedMessages,
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
  *  Build archive view get
  * ************************************ */
 async function buildArchive(req, res, next) {
-  let nav = await utilities.getNav()
-  let messages = await messageModel.getMessagesToId(
-    res.locals.accountData.account_id,
-    true
-  )
-  const unarchivedMessages = await messageModel.getMessageCountById(
-    res.locals.accountData.account_id,
-    false
-  )
-  let inboxTable = utilities.buildInbox(messages);
+  try {
+    const nav = await utilities.getNav()
+    const messages = await messageModel.getMessagesToId(res.locals.accountData.account_id, true)
+    const unarchivedMessages = await messageModel.getMessageCountById(res.locals.accountData.account_id, false)
+    const inboxTable = utilities.buildInbox(messages)
 
-  res.render("message/inbox", {
-    title: `${res.locals.accountData.account_firstname} Inbox: Archived Messages`,
-    nav,
-    errors: null,
-    inboxTable,
-    archived: true,
-    unarchivedMessages,
-  })
+    res.render("message/inbox", {
+      title: `${res.locals.accountData.account_firstname} Inbox: Archived Messages`,
+      nav,
+      errors: null,
+      inboxTable,
+      archived: true,
+      unarchivedMessages,
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
  *  Build message view get
  * ************************************ */
 async function buildMessageView(req, res, next) {
-  const messageId = req.params.messageId;
-  const messageData = await messageModel.getMessageById(messageId);
+  try {
+    const messageId = req.params.messageId
+    const messageData = await messageModel.getMessageById(messageId)
 
-  if (messageData.message_to == res.locals.accountData.account_id) {
-    const nav = await utilities.getNav();
-    res.render("message/message-view", {
-      title: "Message: " + messageData.message_subject,
-      nav,
-      errors: null,
-      messageData,
-    });
-  } else {
-    req.flash("notice", "You aren't authorized to view that message.");
-    res.redirect("/message");
+    if (messageData.message_to === res.locals.accountData.account_id) {
+      const nav = await utilities.getNav()
+      res.render("message/message-view", {
+        title: "Message: " + messageData.message_subject,
+        nav,
+        errors: null,
+        messageData,
+      })
+    } else {
+      req.flash("notice", "You aren't authorized to view that message.")
+      res.redirect("/message")
+    }
+  } catch (error) {
+    next(error)
   }
 }
 
@@ -80,88 +81,106 @@ async function buildMessageView(req, res, next) {
  *  Build compose view get
  * ************************************ */
 async function buildCompose(req, res, next) {
-  const nav = await utilities.getNav();
-  const recipientData = await accountModel.getAccountList();
-  let title = "Compose"
-  let recipientList = ""
+  try {
+    const nav = await utilities.getNav()
+    const recipientData = await accountModel.getAccountList()
+    let title = "Compose"
+    let recipientList = ""
 
-  if (req.params.messageId) {
-    // Reply path
-    const replyTo = await messageModel.getMessageById(req.params.messageId)
-    title = `Reply to ${replyTo.account_firstname} ${replyTo.account_lastname}`
-    res.locals.Subject = "Re: " + replyTo.message_subject + " "
-    res.locals.Body = `\n\n\nOn ${replyTo.message_created.toLocaleString()} from ${
-      replyTo.account_firstname
-    } ${replyTo.account_lastname}:\n${replyTo.message_body}`
-    recipientList = utilities.buildRecipientList(
-      recipientData,
-      replyTo.account_id
-    )
-  } else {
-    // Compose new path
-    recipientList = utilities.buildRecipientList(recipientData)
+    if (req.params.messageId) {
+      // Reply path
+      const replyTo = await messageModel.getMessageById(req.params.messageId);
+      title = `Reply to ${replyTo.account_firstname} ${replyTo.account_lastname}`
+      res.locals.Subject = "Re: " + replyTo.message_subject + " "
+      res.locals.Body = `\n\n\nOn ${replyTo.message_created.toLocaleString()} from ${replyTo.account_firstname} ${replyTo.account_lastname}:\n${replyTo.message_body}`
+      recipientList = utilities.buildRecipientList(recipientData, replyTo.message_from)
+    } else {
+      // Compose new path
+      recipientList = utilities.buildRecipientList(recipientData)
+    }
+
+    res.render("message/compose", {
+      title,
+      nav,
+      errors: null,
+      recipientList,
+    });
+  } catch (error) {
+    next(error);
   }
-
-  res.render("message/compose", {
-    title,
-    nav,
-    errors: null,
-    recipientList,
-  })
 }
 
 /* ****************************************
  *  Process send message post
  * ************************************ */
 async function sendMessage(req, res, next) {
-  const result = await messageModel.sendMessage({
-    message_from: res.locals.accountData.account_id,
-    message_to: req.body.message_to,
-    message_subject: req.body.message_subject,
-    message_body: req.body.message_body,
-  });
-
-  res.redirect("/message")
+  try {
+    await messageModel.sendMessage({
+      message_from: res.locals.accountData.account_id,
+      message_to: req.body.message_to,
+      message_subject: req.body.message_subject,
+      message_body: req.body.message_body,
+    });
+    res.redirect("/message")
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
  *  Deliver delete confirmation view get
  * ************************************ */
 async function buildDelete(req, res, next) {
-  let nav = await utilities.getNav()
-  const messageData = await messageModel.getMessageById(req.params.messageId)
+  try {
+    const nav = await utilities.getNav()
+    const messageData = await messageModel.getMessageById(req.params.messageId)
 
-  res.render("message/delete", {
-    title: "Confirm Deletion",
-    nav,
-    errors: null,
-    messageData,
-  })
+    res.render("message/delete", {
+      title: "Confirm Deletion",
+      nav,
+      errors: null,
+      messageData,
+    })
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
  *  Process delete post
  * ************************************ */
 async function deleteMessage(req, res, next) {
-  messageModel.deleteMessage(req.body.message_id)
-  req.flash("notice", "Message deleted")
-  res.redirect("/message")
+  try {
+    await messageModel.deleteMessage(req.body.message_id)
+    req.flash("notice", "Message deleted");
+    res.redirect("/message")
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
- *  Process send message post
+ *  Process toggle read post
  * ************************************ */
 async function toggleRead(req, res, next) {
-  const message_read = await messageModel.toggleRead(req.params.messageId) // Returns the new value of message_read
-  return res.json(message_read)
+  try {
+    const message_read = await messageModel.toggleRead(req.params.messageId); // Returns the new value of message_read
+    return res.json(message_read)
+  } catch (error) {
+    next(error)
+  }
 }
 
 /* ****************************************
- *  Toggle a messages archived flag
+ *  Toggle a message's archived flag
  * ************************************ */
 async function toggleArchived(req, res, next) {
-  const message_read = await messageModel.toggleArchived(req.params.messageId) // Returns the new value of message_read
-  return res.json(message_read)
+  try {
+    const message_archived = await messageModel.toggleArchived(req.params.messageId); // Returns the new value of message_archived
+    return res.json(message_archived)
+  } catch (error) {
+    next(error)
+  }
 }
 
 module.exports = {

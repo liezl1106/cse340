@@ -229,46 +229,52 @@ async function updateAccount(req, res) {
  *  Process account password update post
  * *************************************** */
 async function updatePassword(req, res) {
-  let nav = await utilities.getNav()
+  let nav = await utilities.getNav();
 
-  const { account_id, account_password } = req.body
+  const { account_id, account_password } = req.body;
 
   // Hash the password before storing.
-  let hashedPassword
+  let hashedPassword;
   try {
-    // regular password and cost (salt is generated automatically)
-    hashedPassword = await bcrypt.hashSync(account_password, 10)
+    // Use bcrypt.hash for asynchronous handling
+    hashedPassword = await bcrypt.hash(account_password, 10);
   } catch (error) {
-    req.flash(
-      "notice",
-      "Sorry, there was an error processing the password update."
-    );
-    res.status(500).render("account/update", {
+    req.flash("notice", "Sorry, there was an error processing the password update.");
+    return res.status(500).render("account/update", {
       title: "Update",
       nav,
       errors: null,
-    })
+    });
   }
 
-  const regResult = await accountModel.updatePassword(account_id, hashedPassword)
+  try {
+    const regResult = await accountModel.updatePassword(account_id, hashedPassword);
 
-  if (regResult) {
-    req.flash(
-      "notice",
-      `Congratulations, you've updated the password.`
-    );
-    res.status(201).render("account/account-management", {
-      title: "Manage",
-      errors: null,
-      nav,
-    })
-  } else {
-    req.flash("notice", "Sorry, the password update failed.")
-    res.status(501).render("account/update", {
+    if (regResult) {
+      req.flash("notice", "Congratulations, you've updated the password.");
+
+      // Update the cookie accountData
+      const accountData = await accountModel.getAccountById(account_id);
+      delete accountData.account_password; // Ensure password isn't stored in cookie
+      res.locals.accountData = accountData;
+      utilities.updateCookie(accountData, res);
+
+      return res.redirect("/account/account-management"); // Use redirect correctly
+    } else {
+      req.flash("notice", "Sorry, the password update failed.");
+      return res.render("account/update", {
+        title: "Update",
+        errors: null,
+        nav,
+      });
+    }
+  } catch (error) {
+    req.flash("notice", "Sorry, there was an error updating the password.");
+    return res.status(500).render("account/update", {
       title: "Update",
-      errors: null,
       nav,
-    })
+      errors: null,
+    });
   }
 }
 

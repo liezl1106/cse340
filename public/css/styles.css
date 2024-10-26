@@ -343,6 +343,10 @@ div a:hover {
   text-decoration: underline; /* Underline on hover */
 }
 
+div p {
+  text-align: left;
+}
+
 /* Account Registration Form */
 /* Form container styles */
 .form-container {
@@ -483,7 +487,8 @@ footer {
 
 /* Footer text */
 footer p {
-  margin: 10px 0; /* Space above and below text */
+  margin: 10px 0;
+  text-align: center; 
 }
 
 /* Mobile Styles */

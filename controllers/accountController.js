@@ -10,40 +10,32 @@ require("dotenv").config()
  * ************************************ */
 async function accountLogin(req, res) {
   let nav = await utilities.getNav();
-  const { account_email, account_password } = req.body
-  
-  console.log("Login attempt with:", { account_email })
-
+  const { account_email, account_password } = req.body;
+  const accountData = await accountModel.getAccountByEmail(account_email);
+  if (!accountData) {
+    req.flash("notice", "Please check your credentials and try again.");
+    res.status(400).render("account/login", {
+      title: "Login",
+      nav,
+      errors: null,
+      account_email,
+    });
+    return;
+  }
   try {
-    const accountData = await accountModel.getAccountByEmail(account_email)
-    console.log("Account data retrieved:", accountData)
-    
-    if (!accountData) {
-      req.flash("notice", "Invalid credentials. Please try again.");
-      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email }) //Use res.render() when you want to display a view without changing the URL
-    }
-
-    const passwordMatch = await bcrypt.compare(account_password, accountData.account_password)
-    console.log("Password match:", passwordMatch);
-    
-    if (passwordMatch) {
+    if (await bcrypt.compare(account_password, accountData.account_password)) {
       delete accountData.account_password;
-      const accessToken = jwt.sign(accountData, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' })
-      const cookieOptions = {
-        httpOnly: true,
-        maxAge: 3600 * 1000,
-        ...(process.env.NODE_ENV !== 'development' && { secure: true })
-      };
-      res.cookie("jwt", accessToken, cookieOptions)
-      return res.redirect("/account/account-management") //Use res.redirect() when you want to change the URL and send the user to a different route
-    } else {
-      req.flash("notice", "Invalid credentials. Please try again.");
-      return res.status(400).render("account/login", { title: "Login", nav, errors: null, account_email })
+      
+      utilities.updateCookie(accountData, res);
+     
+      return res.redirect("/account/");
+    } // Need to have a wrong password option
+    else {
+      req.flash("notice", "Please check your credentials and try again."); // Login was hanging with bad password but correct id
+      res.redirect("/account/");
     }
   } catch (error) {
-    console.error("Error during login process:", error)
-    req.flash("notice", "An error occurred during login. Please try again.")
-    return res.status(500).render("account/login", { title: "Login", nav, errors: null, account_email })
+    return new Error("Access Forbidden");
   }
 }
 
